@@ -120,4 +120,11 @@ export default {
       right: 0;
     }
   }
+  .addressArea ::v-deep .van-button--block{
+    display: block;
+    width: 40%;
+    /* float: right; */
+    position: absolute;
+    right: 0;
+  }
 </style>
