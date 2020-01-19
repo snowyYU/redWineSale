@@ -1,3 +1,7 @@
+/**
+ * axios拦截器
+ */
+
 import axios from 'axios'
 // import querystring from 'querystring'
 
