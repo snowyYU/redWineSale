@@ -5,9 +5,9 @@ import router from './router'
 import store from './store'
 // import directives from './directives'
 import Vue2TouchEvents from 'vue2-touch-events'
-import { Button, Popup, Progress, Cell, CellGroup, Field, AddressEdit, Toast } from 'vant'
+import { Button, Popup, Progress, Cell, CellGroup, Field, AddressEdit, Toast, Loading } from 'vant'
 
-Vue.use(Button).use(Popup).use(Progress).use(Cell).use(CellGroup).use(Field).use(AddressEdit).use(Toast)
+Vue.use(Button).use(Popup).use(Progress).use(Cell).use(CellGroup).use(Field).use(AddressEdit).use(Toast).use(Loading)
 Vue.use(Vue2TouchEvents)
 // Vue.use(directives)
 Vue.config.productionTip = false

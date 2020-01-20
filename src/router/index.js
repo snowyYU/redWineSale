@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomePage from '../views/HomePage.vue'
 import GetRedWine from '../views/GetRedWine.vue'
+import PayResultSuccess from '../views/PayResultSuccess.vue'
+import PayResultFailure from '../views/PayResultFailure.vue'
 
 Vue.use(VueRouter)
 
@@ -12,9 +14,19 @@ const routes = [
     component: HomePage
   },
   {
-    path: 'getRedWine',
+    path: '/getRedWine',
     name: 'getRedWine',
     component: GetRedWine
+  },
+  {
+    path: '/successPage',
+    name: 'success-page',
+    component: PayResultSuccess
+  },
+  {
+    path: '/failurePage',
+    name: 'failure-page',
+    component: PayResultFailure
   },
   {
     path: '/about',
