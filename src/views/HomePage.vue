@@ -1,153 +1,119 @@
 <template>
-<div class="homeBackground" v-touch:swipe="showBuyBtn" v-touch:moving="showBuyBtn">
-  <img src="../assets/img/home.png" alt="" >
-  <!-- <van-button color="red" size="normal" block class="oneBuyBtn" round>单色按钮</van-button> -->
-  <van-button color="red" size="large" block class="bottomBuyBtn" v-if="bottomBtnShow" @click="showCreateAddress">单色按钮</van-button>
-  <!-- <CreateAddress :isShow = "isShowCreateAddress"></CreateAddress> -->
-   <van-popup v-model="isShowCreateAddress" get-container="body" :style="{ height: '60%' }" position="bottom" round closeable close-icon="close" :close-on-click-overlay=false safe-area-inset-bottom>
-     <van-cell-group title="免费领取名额仅剩：5%">
-     </van-cell-group>
-     <div class = "sellProgress" style="padding: 10px 20px">
-         <van-progress
-        stroke-width="8"
-        color="#ee0a24"
-        :percentage="95"/>
-      </div>
-      <div class="addressArea">
-        <van-cell-group title="填写收货信息，免费领取红酒">
-          <van-address-edit
-            :area-list="areaList"
-            show-search-result
-            :search-result="searchResult"
-            :area-columns-placeholder="['请选择', '请选择', '请选择']"
-            save-button-text = "申请免费领取"
-            @save="onSave"
-            @delete="onDelete"
-            @change-detail="onChangeDetail"
-          />
-        </van-cell-group>
-      </div>
-   </van-popup>
-</div>
+  <div class="homeBackground">
+    <img src="../assets/img/home.png" />
+
+    <van-button class="oneBuyBtn" ref="buyBtn" round @click="handleShowUserInfoBox">
+      <span class="text">立即免费领酒！</span>
+      <span class="remark">每人限领1瓶</span>
+    </van-button>
+
+    <!-- 必须放在文档流最底部 -->
+    <bottom-fixed-button v-show="bottomBtnShow" @click="handleShowUserInfoBox" />
+
+    <user-info-box :isShow.sync="userInfoBoxShow" />
+  </div>
 </template>
 
 <script>
-// import CreateAddress from '@/components/CreateAddress.vue'
+import _ from 'lodash'
+import UserInfoBox from '@/components/HomePage/UserInfoBox'
+import BottomFixedButton from '@/components/HomePage/BottomFixedButton'
 
 export default {
+  name: '',
+  components: {
+    UserInfoBox,
+    BottomFixedButton
+  },
   data () {
     return {
+      // 底部悬浮按钮显示状态
       bottomBtnShow: false,
-      isShowCreateAddress: false,
-      areaList: {
-        province_list: {
-          110000: '北京市',
-          120000: '天津市'
-        },
-        city_list: {
-          110100: '北京市',
-          110200: '县',
-          120100: '天津市',
-          120200: '县'
-        },
-        county_list: {
-          110101: '东城区',
-          110102: '西城区',
-          110105: '朝阳区',
-          110106: '丰台区',
-          120101: '和平区',
-          120102: '河东区',
-          120103: '河西区',
-          120104: '南开区',
-          120105: '河北区'
-        }
-      },
-      searchResult: []
+      // 用户信息表单显示状态
+      userInfoBoxShow: false
     }
   },
-  components: {
-    // CreateAddress
+  mounted () {
+    /**
+     * 监听滚动事件
+     * _.throttle() 节流函数，100毫秒执行一次
+     */
+    window.onscroll = _.throttle(this.handleScrollEvent, 100)
+  },
+  beforeDestroy () {
+    // 取消监听滚动事件
+    window.onscroll = null
   },
   methods: {
-    showBuyBtn () {
-      console.log(111)
-      this.bottomBtnShow = true
-    },
-    showCreateAddress () {
-      this.isShowCreateAddress = true
-    },
-    onSave () {
-      this.$toast('save')
-    },
-    onDelete () {
-      this.$toast('delete')
-    },
-    onChangeDetail (val) {
-      console.log(val)
-      if (val) {
-        this.searchResult = [{
-          name: '黄龙万科中心',
-          address: '杭州市西湖区'
-        }]
+    // 监听滚动条事件
+    handleScrollEvent () {
+      // 获取 立即领取按钮 距离顶部高度和自身高度
+      let rectObject = this.$refs['buyBtn'].getBoundingClientRect()
+      if (rectObject.top + rectObject.height < 0) {
+        this.bottomBtnShow = true
       } else {
-        this.searchResult = []
+        this.bottomBtnShow = false
       }
+    },
+    // 显示用户信息表单事件
+    handleShowUserInfoBox () {
+      this.userInfoBoxShow = true
     }
   }
 }
 </script>
 
 <style lang = "scss" scoped>
-  /* .homeBackground{
+/* .homeBackground{
     background-image: url(../assets/img/home.png);
     background-position: center center;
     background-repeat: no-repeat;
   } */
-  .homeBackground {
-    img {
-      width: 100vw;
-      max-width: 600px;
-    }
-    .oneBuyBtn{
-      position: fixed;
-      bottom: 50px;
-    }
-    .bottomBuyBtn{
-      position: fixed;
-      bottom: 0;
-    }
-    .sellProgress{
-      padding: 10px 20px;
-    }
-    .van-progress__pivot{
-      z-index: 100;
-    }
-    .bottomBuyBtn {
-        display: block;
-        width: 100%;
-    }
+.homeBackground {
+  position: relative;
+  margin: 0 auto;
+  max-width: 600px;
+
+  img {
+    width: 100vw;
+    max-width: 600px;
   }
-  .van-hairline--top-bottom::after{
-    border:none !important;
-  }
-  .addressArea{
-    .van-cell-group__title{
-      text-align: center;
-      color: black;
-    }
-    .van-button--block{
-      display: block;
-      width: 40%;
-      /* float: right; */
-      position: absolute;
-      right: 0;
-    }
-  }
-  .addressArea ::v-deep .van-button--block{
-    display: block;
-    width: 40%;
-    /* float: right; */
+
+  .oneBuyBtn {
     position: absolute;
-    right: 0;
+    top: 430px;
+    left: 50%;
+    z-index: 100;
+    transform: translate(-50%, 0);
+    width: 75%;
+    height: 50px;
+    border-color: #747474;
+    background-color: #626262;
+
+    .text {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 16px;
+      text-align: center;
+      line-height: 1;
+      color: #fff;
+    }
+
+    .remark {
+      display: block;
+      font-size: 12px;
+      text-align: center;
+      line-height: 1;
+      color: #fff;
+    }
   }
+
+  .sellProgress {
+    padding: 10px 20px;
+  }
+
+  .van-progress__pivot {
+    z-index: 100;
+  }
+}
 </style>
