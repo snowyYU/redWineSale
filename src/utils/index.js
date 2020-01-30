@@ -58,3 +58,18 @@ export function clearData () {
   sessionStorage.clear()
   return true
 }
+
+/**
+ * 获取客户端环境
+ * @returns {Number} 0.浏览器 1.支付宝 2.微信
+ */
+export function getClientEvn () {
+  let userAgent = navigator.userAgent.toLowerCase()
+  if (userAgent.indexOf('alipay') > -1) {
+    return 1
+  } else if (userAgent.indexOf('micromessenger') > -1) {
+    return 2
+  } else {
+    return 0
+  }
+}

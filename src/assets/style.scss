@@ -1,0 +1,38 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: "PingFang";
+}
+
+body {
+  margin: 0;
+  background-color: #f8f8f8;
+}
+
+.clearfix::after {
+  display: block;
+  clear: both;
+  content: "";
+}
+
+.line-through {
+  text-decoration: line-through;
+}
+
+// toast提示样式
+.van-toast {
+  font-size: 28px;
+  border-radius: 8px;
+  line-height: 40px;
+
+  &.van-toast--text,
+  &.van-toast--html {
+    min-width: 192px;
+    padding: 16px 24px;
+  }
+}

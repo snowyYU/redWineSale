@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomePage from '../views/HomePage.vue'
+import Test from '../views/Test.vue'
 
 Vue.use(VueRouter)
 
@@ -9,7 +10,7 @@ const routes = [
     path: '/',
     name: 'home-page',
     component: HomePage,
-    meta: { title: '恭喜获得￥899进口红酒1瓶' }
+    meta: { title: '恭喜获得￥680红酒一瓶' }
   },
   {
     path: '/getRedWine',
@@ -28,6 +29,18 @@ const routes = [
     name: 'failure-page',
     component: () => import(/* webpackChunkName: "PayResultFailure" */ '../views/PayResultFailure.vue'),
     meta: { title: '订单详情' }
+  },
+  {
+    path: '/orderDetail',
+    name: 'orderDetail',
+    component: () => import(/* webpackChunkName: "OrderDetail" */ '../views/OrderDetail.vue'),
+    meta: { title: '订单详情' }
+  },
+  {
+    path: '/test',
+    name: 'test',
+    component: Test,
+    meta: { title: '恭喜获得￥680红酒一瓶' }
   },
   {
     path: '*',
@@ -49,6 +62,9 @@ const router = new VueRouter({
 
 // 全局前置路由
 router.beforeEach((to, from, next) => {
+  console.log('to:', to)
+  console.log('from:', from)
+
   // if (to.matched.some(record => record.meta.requiresAuth)) {
   //   // this route requires auth, check if logged in
   //   // if not, redirect to login page.
