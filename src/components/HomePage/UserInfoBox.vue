@@ -33,11 +33,11 @@
     <div class="submit-bar">
       <div class="submit-bar__original">
         <span class="label">总金额：</span>
-        <span class="value">￥680</span>
+        <span class="value line-through">￥680</span>
       </div>
       <div class="submit-bar__text">
         <span class="label">￥</span>
-        <span class="value line-through">0</span>
+        <span class="value">0</span>
       </div>
       <van-button class="submit-bar__button" text="申请免费领取" color="#d62435" @click="handleSubmitClick" />
     </div>
