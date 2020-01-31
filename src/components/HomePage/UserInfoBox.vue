@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import areaData from '@/utils/area'
+import areaData from '@/utils/Area'
 import _ from 'lodash'
 import { TimelineLite } from 'gsap'
 
