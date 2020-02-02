@@ -1,14 +1,22 @@
 <template>
   <div class="order-detail">
+    <!-- 支付状态 -->
+    <payment-status />
+
+    <!-- 联系客服按钮 -->
+    <div class="customer-service" @click="handleCustomerService"></div>
+
+    <!-- 收货人地址 -->
+    <user-address @change="handleChangeAddress" />
 
     <!-- 商品信息 -->
     <product-info :list="list" title="商品信息" />
 
     <!-- 底部提示信息 -->
-    <div :class="['tips-text', { 'success': isSuccess }]">{{tipsText}}</div>
+    <div :class="['tips-text', { 'success': isPaid }]">{{tipsText}}</div>
 
-    <!-- 联系客服按钮 -->
-    <div class="customer-service" @click="handleCustomerService"></div>
+    <!-- 修改地址弹窗 -->
+    <address-edit-box :show.sync="addressEditBoxShow" />
 
     <!-- 客服弹窗 -->
     <customer-service-box :show.sync="customerServiceBoxShow" />
@@ -16,13 +24,19 @@
 </template>
 
 <script>
+import UserAddress from '@/components/common/UserAddress'
 import ProductInfo from '@/components/common/ProductInfo'
+import AddressEditBox from '@/components/common/AddressEditBox'
+import PaymentStatus from '@/components/OrderDetail/PaymentStatus'
 import CustomerServiceBox from '@/components/OrderDetail/CustomerServiceBox'
 
 export default {
   name: 'OrderDetail',
   components: {
+    UserAddress,
     ProductInfo,
+    AddressEditBox,
+    PaymentStatus,
     CustomerServiceBox
   },
   data () {
@@ -56,7 +70,9 @@ export default {
         }
       ],
       // 支付成功
-      isSuccess: false,
+      isPaid: false,
+      // 修改地址弹窗
+      addressEditBoxShow: false,
       // 联系客服弹窗
       customerServiceBoxShow: false
     }
@@ -64,10 +80,14 @@ export default {
   computed: {
     // 提示文字
     tipsText () {
-      return this.isSuccess ? '我们已为您申请加急配送，请耐心等待~' : '红酒付款后预计24小时内发货，请耐心等待'
+      return this.isPaid ? '我们已为您申请加急配送，请耐心等待~' : '红酒付款后预计24小时内发货，请耐心等待'
     }
   },
   methods: {
+    // 修改地址按钮点击事件
+    handleChangeAddress () {
+      this.addressEditBoxShow = true
+    },
     // 联系客户按钮点击事件
     handleCustomerService () {
       this.customerServiceBoxShow = true

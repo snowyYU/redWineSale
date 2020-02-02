@@ -86,11 +86,11 @@
 
 <script>
 // import ProductList from '@/components/GetRedWine/ProductList'
-import UserAddress from '@/components/GetRedWine/UserAddress'
+import UserAddress from '@/components/common/UserAddress'
 import ProductInfo from '@/components/GetRedWine/ProductInfo'
 import PayType from '@/components/GetRedWine/PayType'
 import SubmitBar from '@/components/GetRedWine/SubmitBar'
-import AddressEditBox from '@/components/GetRedWine/AddressEditBox'
+import AddressEditBox from '@/components/common/AddressEditBox'
 import ProgressBox from '@/components/common/ProgressBox'
 
 export default {
@@ -107,12 +107,13 @@ export default {
     return {
       productType: '1',
       payType: '1',
+      // 修改地址弹窗
       addressEditBoxShow: false,
       progressBoxShow: false
     }
   },
   methods: {
-    // 修改地址
+    // 修改地址按钮点击事件
     handleChangeAddress () {
       this.addressEditBoxShow = true
     },

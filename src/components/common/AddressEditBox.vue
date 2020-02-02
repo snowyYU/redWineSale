@@ -1,6 +1,6 @@
 <template>
   <van-popup class="address-edit-box" v-model="isShow" closeable close-icon="clear">
-    <div class="address-edit-box__title">修改收获地址</div>
+    <div class="address-edit-box__title">修改收货地址</div>
     <userInfoForm />
     <van-button text="确认修改" color="#d62435" @click="onConfirm" />
   </van-popup>

@@ -118,6 +118,12 @@ export default {
     // 用户信息弹窗关闭后回调
     handlePopUpClosed () {
       this.percentage = 0
+      this.formData = {
+        name: '',
+        phone: '',
+        area: '',
+        address: ''
+      }
     },
     // 显示地址选择框
     handleShowAddressBox () {
@@ -141,56 +147,41 @@ export default {
       this.addressBoxShow = false
     },
     // 提交表单
-    // handleSubmitClick () {
-    //   if (_.isEmpty(this.formData.name)) {
-    //     // this.$toast('收件人姓名不能为空')
-    //     this.$toast('请填写您的真实姓名')
-    //     return
-    //   } else if (!new RegExp('\\S').test(this.formData.name)) {
-    //     // this.$toast('收件人姓名不能全为空格')
-    //     this.$toast('请填写您的真实姓名')
-    //     return
-    //   } else if (this.formData.name.length < 2) {
-    //     // this.$toast('收件人姓名不能少于2位')
-    //     this.$toast('请填写您的真实姓名')
-    //     return
-    //   } else if (this.formData.name.length > 12) {
-    //     // this.$toast('收件人姓名不能多于12位')
-    //     this.$toast('请填写您的真实姓名')
-    //     return
-    //   } else if (_.isEmpty(this.formData.phone)) {
-    //     // this.$toast('手机号码不能为空')
-    //     this.$toast('请填写正确的手机号码')
-    //     return
-    //   } else if (new RegExp('\\D').test(this.formData.phone)) {
-    //     // this.$toast('手机号码只能为数字')
-    //     this.$toast('请填写正确的手机号码')
-    //     return
-    //   } else if (this.formData.phone.length !== 11) {
-    //     // this.$toast('手机号必须为11位')
-    //     this.$toast('请填写正确的手机号码')
-    //     return
-    //   } else if (_.isEmpty(this.formData.area)) {
-    //     // this.$toast('地区不能为空')
-    //     this.$toast('请填写您的收货地区')
-    //     return
-    //   } else if (_.isEmpty(this.formData.address)) {
-    //     // this.$toast('详细地址不能为空')
-    //     this.$toast('请填写准确的详细地址')
-    //     return
-    //   } else if (!new RegExp('\\S').test(this.formData.address)) {
-    //     // this.$toast('详细地址不能全为空格')
-    //     this.$toast('请填写准确的详细地址')
-    //     return
-    //   } else if (!new RegExp('\\D').test(this.formData.address)) {
-    //     // this.$toast('详细地址不能全为数字')
-    //     this.$toast('请填写准确的详细地址')
-    //     return
-    //   }
-    //   this.formSubmit()
-    // },
     handleSubmitClick () {
-      this.$router.push({ name: 'getRedWine' })
+      if (_.isEmpty(this.formData.name.trim())) {
+        // this.$toast('收件人姓名不能为空')
+        this.$toast('请填写您的真实姓名')
+        return
+      } else if (this.formData.name.trim().length < 2) {
+        // this.$toast('收件人姓名不能少于2位')
+        this.$toast('请填写您的真实姓名')
+        return
+      } else if (_.isEmpty(this.formData.phone.trim())) {
+        // this.$toast('手机号码不能为空')
+        this.$toast('请填写正确的手机号码')
+        return
+      } else if (new RegExp('\\D').test(this.formData.phone)) {
+        // this.$toast('手机号码只能为数字')
+        this.$toast('请填写正确的手机号码')
+        return
+      } else if (this.formData.phone.trim().length !== 11) {
+        // this.$toast('手机号必须为11位')
+        this.$toast('请填写正确的手机号码')
+        return
+      } else if (_.isEmpty(this.formData.area.trim())) {
+        // this.$toast('地区不能为空')
+        this.$toast('请选择您的收货地区')
+        return
+      } else if (_.isEmpty(this.formData.address.trim())) {
+        // this.$toast('详细地址不能为空')
+        this.$toast('请填写准确的详细地址')
+        return
+      } else if (!new RegExp('\\D').test(this.formData.address)) {
+        // this.$toast('详细地址不能全为数字')
+        this.$toast('请填写准确的详细地址')
+        return
+      }
+      this.formSubmit()
     },
     // 提交表单
     formSubmit () {

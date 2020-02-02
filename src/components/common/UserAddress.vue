@@ -2,14 +2,14 @@
   <van-cell-group class="user-address" :border="false">
     <van-cell :icon="require('../../assets/img/location.png')" :border="false">
       <template #title>
-        <span class="main-text">张三（16619840266）</span>
+        <span class="main-text">{{username}}（16619840266）</span>
       </template>
 
       <template #label>
-        <span class="small-text">内蒙古自治区-鄂尔多斯市-鄂托克前旗-迎宾南 路南通街中国内蒙古海油小区15号楼1单元3层3 201室</span>
+        <span class="small-text van-multi-ellipsis--l3">{{area}} 路南通街中国内蒙古海油小区15号楼1单元3层3 201室</span>
       </template>
 
-      <van-button @click="handleChangeAddress">
+      <van-button v-if="!isPaid" @click="handleChangeAddress">
         <span class="default-text">修改</span>
         <van-icon name="arrow" />
       </van-button>
@@ -20,6 +20,26 @@
 <script>
 export default {
   name: 'UserAddress',
+  props: {
+    // 支付状态
+    isPaid: {
+      type: Boolean,
+      default: false
+    },
+    // 用户信息
+    userInfo: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
+  },
+  computed: {
+    // 用户名限制长度
+    username () {
+      return this.userInfo.name || '张三'
+    }
+  },
   methods: {
     // 修改地址
     handleChangeAddress () {
