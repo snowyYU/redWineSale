@@ -1,6 +1,6 @@
 <template>
   <van-cell-group class="user-address" :border="false">
-    <van-cell :icon="require('../../assets/img/location.png')" :border="false">
+    <van-cell center :icon="require('../../assets/img/location.png')" :border="false">
       <template #title>
         <span class="main-text">{{username}}（16619840266）</span>
       </template>
@@ -9,22 +9,34 @@
         <span class="small-text van-multi-ellipsis--l3">{{area}} 路南通街中国内蒙古海油小区15号楼1单元3层3 201室</span>
       </template>
 
-      <van-button v-if="!isPaid" @click="handleChangeAddress">
+      <a class="edit-button" v-if="!isPaid" @click="handleChangeAddress">
         <span class="default-text">修改</span>
-        <van-icon name="arrow" />
-      </van-button>
+        <i class="arrow-right"></i>
+      </a>
     </van-cell>
+
+    <!-- 修改地址弹窗 -->
+    <address-edit-box :show.sync="addressEditBoxShow" :getContainer="getContainer" />
   </van-cell-group>
 </template>
 
 <script>
+import AddressEditBox from '@/components/common/AddressEditBox'
+
 export default {
   name: 'UserAddress',
+  components: {
+    AddressEditBox
+  },
   props: {
     // 支付状态
     isPaid: {
       type: Boolean,
       default: false
+    },
+    getContainer: {
+      type: String,
+      default: 'body'
     },
     // 用户信息
     userInfo: {
@@ -34,16 +46,28 @@ export default {
       }
     }
   },
+  data () {
+    return {
+      // 修改地址弹窗
+      addressEditBoxShow: false
+    }
+  },
   computed: {
     // 用户名限制长度
     username () {
+      // if (this.userInfo.name || this.userInfo.name.length > 5) {
+      //   return this.userInfo.name.substr(0, 5) + '...'
+      // }
       return this.userInfo.name || '张三'
+    },
+    area () {
+      return ''
     }
   },
   methods: {
     // 修改地址
     handleChangeAddress () {
-      this.$emit('change')
+      this.addressEditBoxShow = true
     }
   }
 }
@@ -51,33 +75,41 @@ export default {
 
 <style lang="scss" scoped>
 .user-address::v-deep {
-  margin: 0 18px 30px;
+  margin: 0 18px;
   border-radius: 10px;
   overflow: hidden;
+  user-select: none;
 
   .van-cell {
-    align-items: center;
-    padding: 28px;
+    padding: 29px;
+    font-size: 0;
+    line-height: normal;
 
     .van-cell__left-icon {
       margin-right: 28px;
+      min-width: auto;
       height: auto;
-      font-size: 40px;
+      font-size: 0;
+      line-height: normal;
+
+      .van-icon__image {
+        width: 32px;
+        height: 38px;
+      }
     }
 
     .van-cell__title {
-      flex: unset;
-      flex-grow: 1;
+      flex: auto;
 
       .main-text {
         display: block;
-        margin-bottom: 12px;
         font-size: 21.01px;
         color: #333;
-        line-height: 1.2;
+        line-height: 1;
       }
 
       .van-cell__label {
+        margin-top: 12px;
 
         .small-text {
           font-size: 21.01px;
@@ -88,25 +120,83 @@ export default {
     }
 
     .van-cell__value {
-      margin-left: 64px;
-      flex: unset;
-      flex-grow: 0;
-      flex-shrink: 0;
+      flex: none;
+      margin-left: 85px;
 
-      .van-button {
-        border: 0;
+      .edit-button {
+        display: block;
+        font-size: 0;
 
         .default-text {
-          margin-right: 10px;
+          display: inline-block;
+          margin-right: 17px;
           font-size: 21.01px;
           color: #2672ff;
+          line-height: 1;
           vertical-align: middle;
         }
 
-        .van-icon {
-          font-size: 20px;
-          color: #2672ff;
+        .arrow-right {
+          display: inline-block;
+          width: 13px;
+          height: 21px;
+          background-image: url('../../assets/img/arrow-right.png');
+          background-repeat: no-repeat;
+          background-position: center;
+          background-size: 100% 100%;
           vertical-align: middle;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 750px) {
+  .user-address::v-deep {
+    margin: 0 18px;
+    border-radius: 10px;
+
+    .van-cell {
+      padding: 29px;
+
+      .van-cell__left-icon {
+        margin-right: 28px;
+
+        .van-icon__image {
+          width: 32px;
+          height: 38px;
+        }
+      }
+
+      .van-cell__title {
+
+        .main-text {
+          font-size: 21.01px;
+        }
+
+        .van-cell__label {
+          margin-top: 12px;
+
+          .small-text {
+            font-size: 21.01px;
+          }
+        }
+      }
+
+      .van-cell__value {
+        margin-left: 85px;
+
+        .edit-button {
+
+          .default-text {
+            margin-right: 17px;
+            font-size: 21.01px;
+          }
+
+          .arrow-right {
+            width: 13px;
+            height: 21px;
+          }
         }
       }
     }

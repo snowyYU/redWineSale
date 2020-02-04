@@ -1,5 +1,5 @@
 <template>
-  <van-submit-bar :class="['submit-bar', { 'tag': productType !== '1' }]" button-text="立即领取" button-type="default" safe-area-inset-bottom @submit="onSubmit">
+  <van-submit-bar :class="['fixed-submit-bar', { 'tag': productType !== '1' }]" button-text="立即领取" button-type="default" safe-area-inset-bottom @submit="onSubmit">
     <div class="tips-text">{{limitTime}}后，价格恢复¥{{localData.original}}</div>
     <div class="price-text">
       <div class="unit-price">
@@ -16,7 +16,7 @@ import moment from 'moment'
 import { list } from '@/utils/localData'
 
 export default {
-  name: 'SubmitBar',
+  name: 'fixed-submit-bar',
   props: {
     productType: {
       type: String,
@@ -44,18 +44,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.submit-bar::v-deep {
-  box-shadow: 0px -6px 6px 0px rgba(214, 36, 53, 0.05);
+.fixed-submit-bar::v-deep {
 
   .van-submit-bar__bar {
     justify-content: flex-start;
+    align-items: flex-end;
     position: relative;
     padding: 0;
-    height: 103px;
+    height: auto;
 
     .tips-text {
       position: absolute;
-      top: -50px;
+      top: -46px;
       left: 14px;
       width: 358px;
       height: 54px;
@@ -71,14 +71,19 @@ export default {
 
     .price-text {
       flex-grow: 1;
-      padding-top: 11px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
       padding-left: 18px;
       padding-right: 26px;
+      height: 101px;
+      box-shadow: 0px -6px 6px 0px rgba(214, 36, 53, 0.05);
 
       .unit-price {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin-bottom: 5px;
 
         span {
           font-size: 30.83px;
@@ -88,6 +93,7 @@ export default {
       }
 
       .sum-price {
+        margin-bottom: 5px;
         font-size: 53.33px;
         color: #d62435;
         line-height: 1;
@@ -95,15 +101,17 @@ export default {
     }
 
     .van-button {
-      border: none;
+      border: 0;
       width: 320px;
       height: 103px;
       border-radius: 0;
-      font-size: 34px;
-      color: #fff;
-      font-weight: 500;
-      line-height: 103px;
+      line-height: normal;
       background-color: #d62435;
+
+      .van-button__text {
+        font-size: 34px;
+        color: #fff;
+      }
     }
   }
 
@@ -121,6 +129,65 @@ export default {
           font-size: 20px;
           color: #000;
           line-height: 1.2;
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 750px) {
+  .fixed-submit-bar::v-deep {
+    max-width: 750px;
+    left: calc((100% - 750px) / 2);
+
+    .van-submit-bar__bar {
+
+      .tips-text {
+        top: -46px;
+        left: 14px;
+        width: 358px;
+        height: 54px;
+        font-size: 20px;
+        line-height: 38px;
+      }
+
+      .price-text {
+        padding-left: 18px;
+        padding-right: 26px;
+        height: 101px;
+        box-shadow: 0px -6px 6px 0px rgba(214, 36, 53, 0.05);
+
+        .unit-price {
+          margin-bottom: 5px;
+
+          span {
+            font-size: 30.83px;
+          }
+        }
+
+        .sum-price {
+          margin-bottom: 5px;
+          font-size: 53.33px;
+        }
+      }
+
+      .van-button {
+        width: 320px;
+        height: 103px;
+
+        .van-button__text {
+          font-size: 34px;
+        }
+      }
+    }
+
+    &.tag {
+      .van-submit-bar__bar {
+        .van-button {
+          &::after {
+            padding: 0 10px;
+            font-size: 20px;
+          }
         }
       }
     }

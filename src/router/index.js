@@ -1,59 +1,36 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomePage from '../views/HomePage.vue'
-import Test from '../views/Test.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
+    redirect: '/home'
+  },
+  {
+    path: '/home',
     name: 'home-page',
     component: HomePage,
     meta: { title: '恭喜获得￥680红酒一瓶' }
   },
   {
     path: '/getRedWine',
-    name: 'getRedWine',
+    name: 'get-red-wine',
     component: () => import(/* webpackChunkName: "GetRedWine" */ '../views/GetRedWine.vue'),
     meta: { title: '领取进口红酒' }
   },
   {
-    path: '/successPage',
-    name: 'success-page',
-    component: () => import(/* webpackChunkName: "PayResultSuccess" */ '../views/PayResultSuccess.vue'),
-    meta: { title: '订单详情' }
-  },
-  {
-    path: '/failurePage',
-    name: 'failure-page',
-    component: () => import(/* webpackChunkName: "PayResultFailure" */ '../views/PayResultFailure.vue'),
-    meta: { title: '订单详情' }
-  },
-  {
     path: '/orderDetail',
-    name: 'orderDetail',
+    name: 'order-detail',
     component: () => import(/* webpackChunkName: "OrderDetail" */ '../views/OrderDetail.vue'),
     meta: { title: '订单详情' }
   },
   {
-    path: '/test',
-    name: 'test',
-    component: Test,
-    meta: { title: '恭喜获得￥680红酒一瓶' }
-  },
-  {
     path: '*',
-    redirect: '/'
+    redirect: '/home'
   }
-  // {
-  //   path: '/about',
-  //   name: 'about',
-  //   route level code-splitting
-  //   this generates a separate chunk (about.[hash].js) for this route
-  //   which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  // }
 ]
 
 const router = new VueRouter({

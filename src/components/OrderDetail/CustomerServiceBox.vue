@@ -1,5 +1,5 @@
 <template>
-  <van-popup class="customer-service-box" v-model="isShow" round closeable close-icon="clear" safe-area-inset-bottom>
+  <van-popup class="customer-service-box" v-model="isShow" closeable close-icon="clear" safe-area-inset-bottom>
     <div class="customer-service-box__title">客服经理电话</div>
     <div class="customer-service-box__icon"></div>
     <div class="customer-service-box__phone">{{customerServicePhone}}</div>
@@ -38,19 +38,18 @@ export default {
 .customer-service-box::v-deep {
   padding-bottom: 44px;
   width: 512px;
+  border-radius: 10px;
   overflow: hidden;
+  user-select: none;
 
-  .van-icon {
+  .van-popup__close-icon {
+    font-size: 30px;
+    color: #ccc;
+  }
 
-    &.van-popup__close-icon {
-      font-size: 30px;
-      color: #ccc;
-    }
-
-    &.van-popup__close-icon--top-right {
-      top: 30px;
-      right: 30px;
-    }
+  .van-popup__close-icon--top-right {
+    top: 30px;
+    right: 30px;
   }
 
   .customer-service-box__title {
@@ -59,8 +58,6 @@ export default {
     color: #333;
     text-align: center;
     line-height: 1;
-    cursor: default;
-    user-select: none;
   }
 
   .customer-service-box__icon {
@@ -83,6 +80,7 @@ export default {
   }
 
   .call-button {
+
     .van-button {
       display: block;
       margin: 0 auto;
@@ -91,11 +89,57 @@ export default {
       border-radius: 20px;
       border: 0;
       font-size: 0;
-      line-height: unset;
+      line-height: normal;
 
       .van-button__text {
         font-size: 34px;
         color: #fff;
+      }
+    }
+  }
+}
+
+@media (min-width: 750px) {
+  .customer-service-box::v-deep {
+    padding-bottom: 44px;
+    width: 512px;
+    border-radius: 10px;
+
+    .van-popup__close-icon {
+      font-size: 30px;
+    }
+
+    .van-popup__close-icon--top-right {
+      top: 30px;
+      right: 30px;
+    }
+
+    .customer-service-box__title {
+      padding: 28px 0;
+      font-size: 34px;
+    }
+
+    .customer-service-box__icon {
+      margin: 60px auto 16px;
+      width: 96px;
+      height: 95px;
+    }
+
+    .customer-service-box__phone {
+      margin-bottom: 90px;
+      font-size: 34px;
+    }
+
+    .call-button {
+
+      .van-button {
+        width: 408px;
+        height: 80px;
+        border-radius: 20px;
+
+        .van-button__text {
+          font-size: 34px;
+        }
       }
     }
   }

@@ -28,14 +28,30 @@ export default {
   methods: {
     // 按钮点击事件
     handleButtonClick () {
-
+      if (this.isPaid) {
+        // 已支付
+        this.$router.push({ name: 'home-page' })
+      } else {
+        // 刷新支付状态
+      }
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@keyframes animation-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .payment-status {
+  overflow: hidden;
+  user-select: none;
 
   .payment-status__username {
     height: 60px;
@@ -48,9 +64,11 @@ export default {
   .payment-status__success {
     padding-top: 35px;
     padding-bottom: 33px;
+    font-size: 0;
+    text-align: center;
 
     .success-icon {
-      margin: 0 auto;
+      display: inline-block;
       width: 96px;
       height: 96px;
       background-image: url('../../assets/img/success-icon.png');
@@ -65,7 +83,6 @@ export default {
       font-size: 26px;
       color: #333;
       line-height: 1;
-      text-align: center;
     }
 
     .success-tips {
@@ -73,15 +90,16 @@ export default {
       font-size: 22px;
       color: #c3c3c3;
       line-height: 1;
-      text-align: center;
     }
   }
 
   .payment-status__loading {
     padding-top: 18px;
+    font-size: 0;
+    text-align: center;
 
     .loading-icon {
-      margin: 0 auto;
+      display: inline-block;
       width: 113px;
       height: 113px;
       background-image: url('../../assets/img/loading-icon.png');
@@ -96,7 +114,6 @@ export default {
       font-size: 26px;
       color: #333;
       line-height: 1;
-      text-align: center;
     }
 
     .payment-status__tips {
@@ -104,19 +121,17 @@ export default {
       font-size: 24px;
       color: #ccc;
       line-height: 1;
-      text-align: center;
     }
   }
 
   .payment-status__button {
-    display: block;
-    margin: 0 auto;
+    display: inline-block;
     border: 0;
     border-radius: 20px;
     width: 628px;
     height: 80px;
     font-size: 0;
-    line-height: unset;
+    line-height: normal;
 
     .van-button__text {
       font-size: 34px;
@@ -125,12 +140,64 @@ export default {
   }
 }
 
-@keyframes animation-rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+@media (min-width: 750px) {
+  .payment-status {
+
+    .payment-status__username {
+      height: 60px;
+      font-size: 26px;
+      line-height: 60px;
+    }
+
+    .payment-status__success {
+      padding-top: 35px;
+      padding-bottom: 33px;
+
+      .success-icon {
+        width: 96px;
+        height: 96px;
+      }
+
+      .success-text {
+        padding-top: 20px;
+        padding-bottom: 10px;
+        font-size: 26px;
+      }
+
+      .success-tips {
+        padding-bottom: 49px;
+        font-size: 22px;
+      }
+    }
+
+    .payment-status__loading {
+      padding-top: 18px;
+
+      .loading-icon {
+        width: 113px;
+        height: 113px;
+      }
+
+      .loading-text {
+        padding: 20px 0 24px;
+        font-size: 26px;
+      }
+
+      .payment-status__tips {
+        padding: 19px 0 27px;
+        font-size: 24px;
+      }
+    }
+
+    .payment-status__button {
+      border-radius: 20px;
+      width: 628px;
+      height: 80px;
+
+      .van-button__text {
+        font-size: 34px;
+      }
+    }
   }
 }
 </style>

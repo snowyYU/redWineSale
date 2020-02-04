@@ -1,7 +1,7 @@
 <template>
   <van-popup
     class="user-info-box"
-    v-model="popUpShow"
+    v-model="isShow"
     closeable
     round
     close-on-popstate
@@ -11,58 +11,45 @@
     :close-on-click-overlay="false"
     @closed="handlePopUpClosed"
   >
-    <div class="user-info-form">
-      <div class="user-info-form__title">填写收货信息，免费领取红酒</div>
-      <div class="user-info-form__progress">
-        <div class="tips">
-          <span class="tips__label">免费领取名额仅剩：</span>
-          <span class="tips__value">{{remain}}%</span>
-        </div>
-        <div class="progress">
-          <span class="progress__text">当前进度：{{animatedNumber}}%</span>
-          <div class="progress__inner" :style="{ width: animatedNumber + '%' }"></div>
-        </div>
+    <!-- 标题 -->
+    <div class="user-info-box__title">填写收货信息，免费领取红酒</div>
+
+    <!-- 提示文字和进度条 -->
+    <div class="user-info-box__progress">
+      <!-- 提示文字 -->
+      <div class="progress-tips">
+        <span class="progress-tips__lable">免费领取名额仅剩：</span>
+        <span class="progress-tips__value">{{remain}}%</span>
       </div>
-      <div class="user-info-form__inner">
-        <van-field v-model="formData.name" label="收件人" placeholder="请输入收件人姓名" maxlength="12" />
-        <van-field v-model="formData.phone" type="tel" label="手机号" placeholder="请输入手机号 (限领一瓶)" maxlength="11" />
-        <van-field v-model="formData.area" label="地区" placeholder="请选择地区 (省-市-县)" readonly clickable @click="handleShowAddressBox" />
-        <van-field class="textarea" v-model="formData.address" type="textarea" label="详细地址" placeholder="如道路、小区、单元、楼道号、室等" maxlength="200" />
-      </div>
-    </div>
-    <div class="submit-bar">
-      <div class="submit-bar__original">
-        <span class="label">总金额：</span>
-        <span class="value line-through">￥680</span>
-      </div>
-      <div class="submit-bar__text">
-        <span class="label">￥</span>
-        <span class="value">0</span>
-      </div>
-      <van-button class="submit-bar__button" text="申请免费领取" color="#d62435" @click="handleSubmitClick" />
+
+      <!-- 进度条 -->
+      <progress-bar :percentage="animatedNumber" />
     </div>
 
-    <van-popup
-      class="address-box"
-      v-model="addressBoxShow"
-      position="bottom"
-      close-on-popstate
-      :get-container="getContainer"
-    >
-      <van-area :area-list="areaData" :columns-placeholder="['请选择', '请选择', '请选择']" @cancel="handleAddressCancel" @confirm="handleAddressConfirm" />
-    </van-popup>
+    <!-- 用户信息表单 -->
+    <userInfoForm ref="user-info-form" getContainer=".home-page" />
+
+    <!-- 底部提交栏 -->
+    <submit-bar :original="localData.original" :price="localData.price" @submit="onSubmit"/>
   </van-popup>
 </template>
 
 <script>
-import areaData from '@/utils/Area'
-import _ from 'lodash'
 import { TimelineLite } from 'gsap'
+import { list } from '@/utils/localData'
+import userInfoForm from '@/components/common/userInfoForm'
+import ProgressBar from '@/components/HomePage/ProgressBar'
+import SubmitBar from '@/components/HomePage/SubmitBar'
 
 export default {
   name: 'test',
+  components: {
+    userInfoForm,
+    ProgressBar,
+    SubmitBar
+  },
   props: {
-    isShow: {
+    show: {
       type: Boolean,
       default: false
     }
@@ -71,28 +58,18 @@ export default {
     return {
       // 加载状态
       loading: false,
-      // 表单参数
-      formData: {
-        name: '',
-        phone: '',
-        area: '',
-        address: ''
-      },
       // 进度
       percentage: 0,
-      // 地区选择框显示状态
-      addressBoxShow: false,
-      // 地区数据
-      areaData: areaData
+      localData: list[0]
     }
   },
   computed: {
-    popUpShow: {
+    isShow: {
       get () {
-        return this.isShow
+        return this.show
       },
       set () {
-        this.$emit('update:isShow', false)
+        this.$emit('update:show', false)
       }
     },
     animatedNumber () {
@@ -103,7 +80,7 @@ export default {
     }
   },
   watch: {
-    isShow (val) {
+    show (val) {
       if (val) {
         const timeline = new TimelineLite()
         timeline.to(this.$data, 2, { percentage: 95 })
@@ -111,85 +88,19 @@ export default {
     }
   },
   methods: {
-    // 获取挂载节点
-    getContainer () {
-      return document.querySelector('.home-page')
-    },
     // 用户信息弹窗关闭后回调
     handlePopUpClosed () {
       this.percentage = 0
-      this.formData = {
+      this.$refs['user-info-form'].formData = {
         name: '',
         phone: '',
         area: '',
         address: ''
       }
     },
-    // 显示地址选择框
-    handleShowAddressBox () {
-      this.addressBoxShow = true
-    },
-    // 取消
-    handleAddressCancel () {
-      this.addressBoxShow = false
-    },
-    // 确认
-    handleAddressConfirm (arr) {
-      let searchResult = []
-      if (arr[2] === undefined || arr[2].code === '') {
-        this.$toast('请选择地区')
-        return
-      }
-      arr.map(item => {
-        searchResult.push(item.name)
-      })
-      this.formData.area = [...new Set(searchResult)].join('/')
-      this.addressBoxShow = false
-    },
     // 提交表单
-    handleSubmitClick () {
-      if (_.isEmpty(this.formData.name.trim())) {
-        // this.$toast('收件人姓名不能为空')
-        this.$toast('请填写您的真实姓名')
-        return
-      } else if (this.formData.name.trim().length < 2) {
-        // this.$toast('收件人姓名不能少于2位')
-        this.$toast('请填写您的真实姓名')
-        return
-      } else if (_.isEmpty(this.formData.phone.trim())) {
-        // this.$toast('手机号码不能为空')
-        this.$toast('请填写正确的手机号码')
-        return
-      } else if (new RegExp('\\D').test(this.formData.phone)) {
-        // this.$toast('手机号码只能为数字')
-        this.$toast('请填写正确的手机号码')
-        return
-      } else if (this.formData.phone.trim().length !== 11) {
-        // this.$toast('手机号必须为11位')
-        this.$toast('请填写正确的手机号码')
-        return
-      } else if (_.isEmpty(this.formData.area.trim())) {
-        // this.$toast('地区不能为空')
-        this.$toast('请选择您的收货地区')
-        return
-      } else if (_.isEmpty(this.formData.address.trim())) {
-        // this.$toast('详细地址不能为空')
-        this.$toast('请填写准确的详细地址')
-        return
-      } else if (!new RegExp('\\D').test(this.formData.address)) {
-        // this.$toast('详细地址不能全为数字')
-        this.$toast('请填写准确的详细地址')
-        return
-      }
-      this.formSubmit()
-    },
-    // 提交表单
-    formSubmit () {
-      // this.loading = true
-      // setTimeout(() => {
-      //   this.loading = false
-      // }, 1000)
-      this.$router.push({ name: 'getRedWine' })
+    onSubmit () {
+      this.$refs['user-info-form'].onSubmit()
     }
   }
 }
@@ -197,6 +108,8 @@ export default {
 
 <style lang="scss" scoped>
 .user-info-box::v-deep {
+  user-select: none;
+  overflow-x: hidden;
 
   .van-popup__close-icon {
     font-size: 30px;
@@ -207,171 +120,175 @@ export default {
     top: 30px;
     right: 30px;
   }
-}
 
-.user-info-form {
-
-  .user-info-form__title {
-    padding: 28px 0 30px;
-    text-align: center;
+  .user-info-box__title {
+    height: 90px;
     font-size: 34px;
-    font-family: "PingFang";
     color: #333;
-    line-height: 1;
+    text-align: center;
+    line-height: 90px;
   }
 
-  .user-info-form__progress {
+  .user-info-box__progress {
+    margin-top: 2px;
     margin-bottom: 40px;
-    text-align: center;
 
-    .tips {
+    .progress-tips {
       margin-bottom: 8px;
-      line-height: 1;
+      font-size: 0;
+      text-align: center;
 
-      .tips__label {
+      .progress-tips__lable {
+        display: inline-block;
         font-size: 19.95px;
         color: #333;
+        line-height: 1;
       }
 
-      .tips__value {
+      .progress-tips__value {
+        display: inline-block;
         font-size: 30.83px;
         color: #d62435;
+        line-height: 1;
       }
     }
 
-    .progress {
-      position: relative;
+    .progress-bar {
       margin: 0 auto;
       width: 451px;
-      height: 35px;
-      border-radius: 35px;
-      background-color: #f7d2df;
-      overflow: hidden;
-
-      .progress__text {
-        display: block;
-        position: relative;
-        z-index: 2;
-        height: 100%;
-        font-size: 19.95px;
-        font-family: "PingFang";
-        color: #fff;
-        line-height: 35px;
-      }
-
-      .progress__inner {
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 1;
-        width: 0%;
-        height: 100%;
-        border-radius: 35px;
-        background-color: #d62435;
-      }
     }
   }
 
-  .user-info-form__inner {
-    padding: 0 36px;
+  .user-info-form {
+    padding: 0 36px 33px;
 
-    .van-cell:not(:last-child)::after {
-      border-bottom: 0;
-    }
-
-    .van-cell--clickable:active {
-      background-color: rgba(0, 0, 0, .1);
-    }
-
-    .van-field::v-deep {
-      height: 75px;
-      margin-bottom: 35px;
-      padding: 0 25px;
+    .van-field {
       border-radius: 9px;
       background-color: #f2f2f2;
+      font-size: 0;
+      line-height: normal;
 
-      &.textarea {
-        height: auto;
+      &.van-cell--clickable:active {
+        background-color: rgba(0, 0, 0, .1);
+      }
+
+      &:not(:last-child) {
+        margin-bottom: 36px;
+        padding: 0 27px;
+        height: 75px;
       }
 
       .van-field__label {
-        width: 130px;
-        font-size: 26px;
-        font-family: "PingFang";
-        color: #333;
-        line-height: 75px;
+        width: 128px;
+
+        span {
+          font-size: 26px;
+          color: #333;
+        }
       }
 
       .van-cell__value {
-        font-size: 26px;
-        font-family: "PingFang";
-        line-height: 75px;
+
+        .van-field__body {
+
+          .van-field__control {
+            font-size: 26px;
+          }
+        }
+      }
+
+      &.textarea {
+        padding: 17px 27px;
       }
     }
   }
 }
 
-.submit-bar {
-  display: flex;
-  align-items: center;
-  padding-left: 36px;
-  box-shadow: 0px -3px 3px 0px rgba(214, 36, 53, 0.05);
+@media (min-width: 750px) {
+  .user-info-box::v-deep {
+    max-width: 750px;
+    left: calc((100% - 750px) / 2);
 
-  .submit-bar__original {
-    flex-shrink: 0;
-    font-size: 30.83px;
-    font-family: "PingFang";
-    color: #333;
-
-    .label {
-
+    .van-popup__close-icon {
+      font-size: 30px;
     }
 
-    .value {
-
+    .van-popup__close-icon--top-right {
+      top: 30px;
+      right: 30px;
     }
-  }
 
-  .submit-bar__text {
-    padding-right: 22px;
-    flex-grow: 1;
-    text-align: right;
-
-    .label,
-    .value {
-      font-size: 53.33px;
-      font-family: "PingFang";
-      color: #d62435;
+    .user-info-box__title {
+      height: 90px;
+      font-size: 34px;
+      line-height: 90px;
     }
-  }
 
-  .submit-bar__button {
-    flex-shrink: 0;
-    width: 363px;
-    height: 103px;
-    border: 0;
-    border-radius: 0;
-    font-size: 34px;
-    font-family: "PingFang";
-    color: #fff;
-    line-height: 1.2;
-  }
-}
+    .user-info-box__progress {
+      margin-top: 2px;
+      margin-bottom: 40px;
 
-.address-box {
-  .van-area::v-deep {
-    .van-picker__toolbar {
-      height: 88px;
-      line-height: 88px;
+      .progress-tips {
+        margin-bottom: 8px;
 
-      .van-picker__cancel,
-      .van-picker__confirm {
-        padding: 0 32px;
-        font-size: 28px;
+        .progress-tips__lable {
+          font-size: 19.95px;
+        }
+
+        .progress-tips__value {
+          font-size: 30.83px;
+        }
+      }
+
+      .progress-bar {
+        width: 451px;
       }
     }
-    .van-picker-column {
-      font-size: 28px;
+
+    .user-info-form {
+      padding: 0 36px 33px;
+
+      .van-field {
+        border-radius: 9px;
+
+        &:not(:last-child) {
+          margin-bottom: 36px;
+          padding: 0 27px;
+          height: 75px;
+        }
+
+        .van-field__label {
+          width: 128px;
+
+          span {
+            font-size: 26px;
+          }
+        }
+
+        .van-cell__value {
+
+          .van-field__body {
+
+            .van-field__control {
+              font-size: 26px;
+            }
+          }
+        }
+
+        &.textarea {
+          padding: 17px 27px;
+
+          .van-cell__value {
+
+            .van-field__body {
+
+              .van-field__control {
+                min-height: 120px;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

@@ -1,22 +1,19 @@
 <template>
   <div class="order-detail">
     <!-- 支付状态 -->
-    <payment-status />
+    <payment-status :isPaid="isPaid" />
 
     <!-- 联系客服按钮 -->
     <div class="customer-service" @click="handleCustomerService"></div>
 
     <!-- 收货人地址 -->
-    <user-address @change="handleChangeAddress" />
+    <user-address :isPaid="isPaid" />
 
     <!-- 商品信息 -->
     <product-info :list="list" title="商品信息" />
 
     <!-- 底部提示信息 -->
     <div :class="['tips-text', { 'success': isPaid }]">{{tipsText}}</div>
-
-    <!-- 修改地址弹窗 -->
-    <address-edit-box :show.sync="addressEditBoxShow" />
 
     <!-- 客服弹窗 -->
     <customer-service-box :show.sync="customerServiceBoxShow" />
@@ -25,17 +22,15 @@
 
 <script>
 import UserAddress from '@/components/common/UserAddress'
-import ProductInfo from '@/components/common/ProductInfo'
-import AddressEditBox from '@/components/common/AddressEditBox'
+import ProductInfo from '@/components/OrderDetail/ProductInfo'
 import PaymentStatus from '@/components/OrderDetail/PaymentStatus'
 import CustomerServiceBox from '@/components/OrderDetail/CustomerServiceBox'
 
 export default {
-  name: 'OrderDetail',
+  name: 'order-detail',
   components: {
     UserAddress,
     ProductInfo,
-    AddressEditBox,
     PaymentStatus,
     CustomerServiceBox
   },
@@ -71,8 +66,6 @@ export default {
       ],
       // 支付成功
       isPaid: false,
-      // 修改地址弹窗
-      addressEditBoxShow: false,
       // 联系客服弹窗
       customerServiceBoxShow: false
     }
@@ -84,10 +77,6 @@ export default {
     }
   },
   methods: {
-    // 修改地址按钮点击事件
-    handleChangeAddress () {
-      this.addressEditBoxShow = true
-    },
     // 联系客户按钮点击事件
     handleCustomerService () {
       this.customerServiceBoxShow = true
@@ -98,23 +87,7 @@ export default {
 
 <style lang="scss" scoped>
 .order-detail {
-
-  .tips-text {
-    padding : 10px 0 10px 46px;
-    font-size: 22px;
-    color: #c3c3c3;
-    line-height: 1;
-    background-color: transparent;
-    cursor: default;
-    user-select: none;
-
-    &.success {
-      padding : 10px 0 10px 0;
-      font-size: 24px;
-      color: #ccc;
-      text-align: center;
-    }
-  }
+  user-select: none;
 
   .customer-service {
     position: fixed;
@@ -147,6 +120,54 @@ export default {
       transform: translate(-50%,-50%);
       opacity: 0;
       content: ' ';
+    }
+  }
+
+  .user-address {
+    margin-bottom: 18px;
+  }
+
+  .tips-text {
+    padding : 10px 0 10px 46px;
+    font-size: 22px;
+    color: #c3c3c3;
+    line-height: 1;
+    background-color: transparent;
+
+    &.success {
+      padding : 10px 0 10px 0;
+      font-size: 24px;
+      color: #ccc;
+      text-align: center;
+    }
+  }
+}
+
+@media (min-width: 750px) {
+  .order-detail {
+    margin: 0 auto;
+    max-width: 750px;
+
+    .customer-service {
+      top: 79px;
+      right: calc((100% - 750px) / 2);
+      width: 34px;
+      height: 129px;
+      border-radius: 10px 0 0 10px;
+    }
+
+    .user-address {
+      margin-bottom: 18px;
+    }
+
+    .tips-text {
+      padding : 10px 0 10px 46px;
+      font-size: 22px;
+
+      &.success {
+        padding : 10px 0 10px 0;
+        font-size: 24px;
+      }
     }
   }
 }

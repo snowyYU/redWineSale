@@ -2,20 +2,20 @@
   <van-cell-group class="product-info" :border="false">
     <van-cell center>
       <template #title>
-        <span class="main-text" color-3>和平鸽干红葡萄酒</span>
+        <span font-size-2 color-3>和平鸽干红葡萄酒</span>
       </template>
 
-      <span color-red>￥{{localData.price}}</span>
-      <span color-9>（原价：<span class="line-through">￥{{localData.original}}</span>)</span>
+      <span font-size-3 color-red>￥{{localData.price}}</span>
+      <span font-size-3 color-9>（原价：<del>￥{{localData.original}}</del>)</span>
     </van-cell>
 
     <van-cell center>
       <template #title>
-        <span class="main-text" color-3>邮费</span>
-        <span class="small-text" color-9>（普通快递，24小时内发货）</span>
+        <span font-size-2 color-3>邮费</span>
+        <span font-size-1 color-9>（普通快递，24小时内发货）</span>
       </template>
 
-      <span color-9>￥{{localData.postage}}</span>
+      <span font-size-3 color-9>￥{{localData.postage}}</span>
     </van-cell>
   </van-cell-group>
 </template>
@@ -46,14 +46,16 @@ export default {
 
 <style lang="scss" scoped>
 .product-info::v-deep {
-  margin: 0 18px 30px;
+  margin: 0 18px;
   border-radius: 10px;
+  user-select: none;
   overflow: hidden;
 
   .van-cell {
-    padding: 0 28px;
+    padding: 0 25px 0 30px;
     height: 76px;
-    line-height: 76px;
+    font-size: 0;
+    line-height: normal;
 
     &:not(:last-child)::after {
       right: 28px;
@@ -61,27 +63,23 @@ export default {
     }
 
     .van-cell__title {
-      flex: unset;
-      flex-grow: 1;
-      flex-shrink: 0;
-
-      .main-text {
-        font-size: 26.74px;
-      }
-
-      .small-text {
-        font-size: 21.01px;
-      }
+      flex: 1 0 auto;
     }
 
     .van-cell__value {
-      flex: unset;
-      flex-grow: 0;
-      flex-shrink: 0;
+      flex: none;
+    }
 
-      span {
-        font-size: 28.65px;
-      }
+    [font-size-1] {
+      font-size: 21.01px;
+    }
+
+    [font-size-2] {
+      font-size: 26.74px;
+    }
+
+    [font-size-3] {
+      font-size: 28.65px;
     }
 
     [color-red] {
@@ -94,6 +92,35 @@ export default {
 
     [color-9] {
       color: #999;
+    }
+  }
+}
+
+@media (min-width: 750px) {
+  .product-info::v-deep {
+    margin: 0 18px;
+    border-radius: 10px;
+
+    .van-cell {
+      padding: 0 25px 0 30px;
+      height: 76px;
+
+      &:not(:last-child)::after {
+        right: 28px;
+        left: 28px;
+      }
+
+      [font-size-1] {
+        font-size: 21.01px;
+      }
+
+      [font-size-2] {
+        font-size: 26.74px;
+      }
+
+      [font-size-3] {
+        font-size: 28.65px;
+      }
     }
   }
 }
