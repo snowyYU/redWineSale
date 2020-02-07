@@ -14,11 +14,13 @@
     <userInfoForm ref="user-info-form" :getContainer="getContainer" />
 
     <!-- 确认按钮 -->
-    <van-button text="确认修改" color="#d62435" @click="onConfirm" />
+    <van-button text="确认修改" color="#d62435" :loading="loading" loading-text="加载中..." @click="onConfirm" />
   </van-popup>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+import { setUserInfo } from '@/utils'
 import userInfoForm from '@/components/common/userInfoForm'
 
 export default {
@@ -38,7 +40,8 @@ export default {
   },
   data () {
     return {
-
+      // 加载状态
+      loading: false
     }
   },
   computed: {
@@ -51,11 +54,34 @@ export default {
       }
     }
   },
+  watch: {
+    show (val) {
+      if (val) {
+        this.$refs['user-info-form'].initForm()
+      }
+    }
+  },
   methods: {
+    ...mapActions(['updateUserInfo']),
     // 确认修改
     onConfirm () {
+      this.loading = true
+      this.$refs['user-info-form'].onSubmit().then(res => {
+        // 存储用户信息
+        setUserInfo(res)
+        this.updateUserInfo(res)
 
+        // 跳转
+        this.$router.push({ name: 'get-red-wine' })
+      }).catch(err => {
+        console.log(err)
+      }).finally(() => {
+        this.loading = false
+      })
     }
+  },
+  mounted () {
+    this.$refs['user-info-form'].initForm()
   }
 }
 </script>

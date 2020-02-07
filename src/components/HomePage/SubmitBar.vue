@@ -10,7 +10,7 @@
       <div class="submit-bar__text">￥{{price}}</div>
     </div>
 
-    <van-button class="submit-bar__button" text="申请免费领取" color="#d62435" @click="handleSubmitClick" />
+    <van-button class="submit-bar__button" text="申请免费领取" color="#d62435" :loading="loading" loading-text="申请免费领取" @click="handleSubmitClick" />
   </div>
 </template>
 
@@ -25,6 +25,10 @@ export default {
     price: {
       type: Number,
       default: 0
+    },
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {

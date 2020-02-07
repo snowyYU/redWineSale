@@ -15,8 +15,6 @@
     <!-- 底部浮动按钮 -->
     <fixed-submit-bar ref="fixed-submit-bar" :productType="productType" @submit="onSubmit" />
 
-    <!-- 当前进度弹窗 -->
-    <progress-box :show.sync="progressBoxShow" />
   </div>
 </template>
 
@@ -27,7 +25,6 @@ import UserAddress from '@/components/common/UserAddress'
 import ProductInfo from '@/components/GetRedWine/ProductInfo'
 import PayType from '@/components/GetRedWine/PayType'
 import FixedSubmitBar from '@/components/GetRedWine/FixedSubmitBar'
-import ProgressBox from '@/components/common/ProgressBox'
 
 export default {
   name: 'get-red-wine',
@@ -36,15 +33,14 @@ export default {
     UserAddress,
     ProductInfo,
     PayType,
-    FixedSubmitBar,
-    ProgressBox
+    FixedSubmitBar
   },
   data () {
     return {
+      loading: false,
       isSafePadding: false,
       productType: '1',
-      payType: '1',
-      progressBoxShow: false
+      payType: '1'
     }
   },
   mounted () {
@@ -55,6 +51,10 @@ export default {
      */
     window.onresize = _.throttle(this.useSafePadding, 100)
   },
+  beforeDestroy () {
+    // 取消监听窗口尺寸变化
+    window.onresize = null
+  },
   methods: {
     useSafePadding () {
       let fixedSubmitBar = this.$refs['fixed-submit-bar'].$el
@@ -63,7 +63,7 @@ export default {
     },
     // 提交订单
     onSubmit () {
-
+      this.$router({ name: 'order-detai' })
     }
   }
 }

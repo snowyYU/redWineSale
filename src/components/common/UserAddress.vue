@@ -2,11 +2,11 @@
   <van-cell-group class="user-address" :border="false">
     <van-cell center :icon="require('../../assets/img/location.png')" :border="false">
       <template #title>
-        <span class="main-text">{{username}}（16619840266）</span>
+        <span class="main-text">{{username}}（{{userInfo.phone}}）</span>
       </template>
 
       <template #label>
-        <span class="small-text van-multi-ellipsis--l3">{{area}} 路南通街中国内蒙古海油小区15号楼1单元3层3 201室</span>
+        <span class="small-text van-multi-ellipsis--l3">{{userInfo.area}} {{userInfo.address}}</span>
       </template>
 
       <a class="edit-button" v-if="!isPaid" @click="handleChangeAddress">
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import AddressEditBox from '@/components/common/AddressEditBox'
 
 export default {
@@ -37,13 +38,6 @@ export default {
     getContainer: {
       type: String,
       default: 'body'
-    },
-    // 用户信息
-    userInfo: {
-      type: Object,
-      default () {
-        return {}
-      }
     }
   },
   data () {
@@ -53,15 +47,13 @@ export default {
     }
   },
   computed: {
+    ...mapState(['userInfo']),
     // 用户名限制长度
     username () {
-      // if (this.userInfo.name || this.userInfo.name.length > 5) {
-      //   return this.userInfo.name.substr(0, 5) + '...'
-      // }
-      return this.userInfo.name || '张三'
-    },
-    area () {
-      return ''
+      if (this.userInfo.name && this.userInfo.name.length > 5) {
+        return this.userInfo.name.substr(0, 5) + '...'
+      }
+      return this.userInfo.name || ''
     }
   },
   methods: {

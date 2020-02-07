@@ -6,7 +6,7 @@ import _ from 'lodash'
 
 /**
  * 获取session数据
- * @param {*} key 键
+ * @param {String} key 键
  */
 export function getData (key) {
   if (_.isEmpty(key)) {
@@ -22,7 +22,7 @@ export function getData (key) {
 
 /**
  * 存储session数据(单独一个Number类型的0需要转为String类型存储)
- * @param {*} key 键
+ * @param {String} key 键
  * @param {*} val 值
  */
 export function setData (key, val) {
@@ -40,7 +40,7 @@ export function setData (key, val) {
 
 /**
  * 删除session数据
- * @param {*} key 键
+ * @param {String} key 键
  */
 export function removeData (key) {
   if (_.isEmpty(key)) {
@@ -72,4 +72,19 @@ export function getClientEvn () {
   } else {
     return 0
   }
+}
+
+/**
+ * 获取用户信息
+ */
+export function getUserInfo () {
+  return getData('userInfo')
+}
+
+/**
+ * 存储用户信息
+ * @param {Object} userInfo
+ */
+export function setUserInfo (userInfo) {
+  setData('userInfo', userInfo)
 }

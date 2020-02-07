@@ -1,7 +1,3 @@
-export const obj = {
-  name: '和平鸽干红葡萄酒'
-}
-
 export const list = [
   {
     // 第一款（1瓶）
