@@ -1,4 +1,5 @@
 <template>
+<div>
   <van-popup
     class="area-pick-box"
     v-model="isShow"
@@ -9,6 +10,7 @@
   >
     <van-area :area-list="areaData" :columns-placeholder="['请选择', '请选择', '请选择']" @cancel="handleAreaCancel" @confirm="handleAreaConfirm" />
   </van-popup>
+</div>
 </template>
 
 <script>

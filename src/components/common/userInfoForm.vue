@@ -83,12 +83,13 @@ export default {
         this.$toast('请填写准确的详细地址')
         return false
       }
+      console.log('verify success')
       return true
     },
     // 提交
     onSubmit () {
       if (this.formCheck()) {
-        this.$router.push({ name: 'getRedWine' })
+        this.$router.push({ name: 'get-red-wine' })
       }
     },
     // 编辑
