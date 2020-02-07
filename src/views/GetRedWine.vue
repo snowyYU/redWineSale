@@ -14,7 +14,6 @@
 
     <!-- 底部浮动按钮 -->
     <fixed-submit-bar ref="fixed-submit-bar" :productType="productType" @submit="onSubmit" />
-
   </div>
 </template>
 

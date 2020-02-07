@@ -60,7 +60,9 @@ export default {
   watch: {
     show (val) {
       if (val) {
-        this.$refs['user-info-form'].initForm()
+        this.$nextTick(() => {
+          this.$refs['user-info-form'].initForm()
+        })
       }
     }
   },
@@ -82,9 +84,6 @@ export default {
         this.loading = false
       })
     }
-  },
-  mounted () {
-    this.$refs['user-info-form'].initForm()
   }
 }
 </script>
