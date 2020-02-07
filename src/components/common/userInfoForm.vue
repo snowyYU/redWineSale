@@ -12,6 +12,7 @@
 
 <script>
 import _ from 'lodash'
+import { mapState } from 'vuex'
 import AreaPickBox from '@/components/common/AreaPickBox'
 
 export default {
@@ -38,6 +39,9 @@ export default {
         address: ''
       }
     }
+  },
+  computed: {
+    ...mapState(['userInfo'])
   },
   methods: {
     // 显示地区选择框
@@ -86,16 +90,27 @@ export default {
       console.log('verify success')
       return true
     },
-    // 提交
-    onSubmit () {
-      if (this.formCheck()) {
-        this.$router.push({ name: 'get-red-wine' })
-      }
+    // 表单初始化
+    initForm () {
+      this.formData = this.userInfo
     },
-    // 编辑
-    onEdit () {
-      if (this.formCheck()) {
-
+    // 提交表单
+    onSubmit () {
+      return new Promise((resolve, reject) => {
+        if (this.formCheck()) {
+          resolve(this.formData)
+        } else {
+          reject(new Error('表单填写错误'))
+        }
+      })
+    },
+    // 清空表单
+    clearForm () {
+      this.formData = {
+        name: '',
+        phone: '',
+        area: '',
+        address: ''
       }
     }
   }

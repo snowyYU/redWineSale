@@ -19,7 +19,7 @@
       <!-- 提示文字 -->
       <div class="progress-tips">
         <span class="progress-tips__lable">免费领取名额仅剩：</span>
-        <span class="progress-tips__value">{{remain}}%</span>
+        <span class="progress-tips__value">{{remaining}}%</span>
       </div>
 
       <!-- 进度条 -->
@@ -27,16 +27,17 @@
     </div>
 
     <!-- 用户信息表单 -->
-    <userInfoForm ref="user-info-form" getContainer=".home-page" />
+    <userInfoForm ref="user-info-form" />
 
     <!-- 底部提交栏 -->
-    <submit-bar :original="localData.original" :price="localData.price" @submit="onSubmit"/>
+    <submit-bar :original="localData.productList[0].original" :price="localData.productList[0].price" :loading="loading" @submit="onSubmit"/>
   </van-popup>
 </template>
 
 <script>
+import { setUserInfo } from '@/utils'
 import { TimelineLite } from 'gsap'
-import { list } from '@/utils/localData'
+import { mapState, mapActions } from 'vuex'
 import userInfoForm from '@/components/common/userInfoForm'
 import ProgressBar from '@/components/HomePage/ProgressBar'
 import SubmitBar from '@/components/HomePage/SubmitBar'
@@ -58,12 +59,12 @@ export default {
     return {
       // 加载状态
       loading: false,
-      // 进度
-      percentage: 0,
-      localData: list[0]
+      // 已售进度
+      percentage: 0
     }
   },
   computed: {
+    ...mapState(['localData']),
     isShow: {
       get () {
         return this.show
@@ -72,35 +73,46 @@ export default {
         this.$emit('update:show', false)
       }
     },
+    // 已售进度取整
     animatedNumber () {
       return Math.ceil(this.percentage)
     },
-    remain () {
+    // 剩余名额
+    remaining () {
       return 100 - this.animatedNumber
     }
   },
   watch: {
     show (val) {
       if (val) {
-        const timeline = new TimelineLite()
-        timeline.to(this.$data, 2, { percentage: 95 })
+        // 在2秒内从0增长到指定值
+        new TimelineLite().to(this.$data, 2, { percentage: this.localData.sales })
       }
     }
   },
   methods: {
+    ...mapActions(['updateUserInfo']),
     // 用户信息弹窗关闭后回调
     handlePopUpClosed () {
       this.percentage = 0
-      this.$refs['user-info-form'].formData = {
-        name: '',
-        phone: '',
-        area: '',
-        address: ''
-      }
+      // 清空表单
+      // this.$refs['user-info-form'].clearForm()
     },
     // 提交表单
     onSubmit () {
-      this.$refs['user-info-form'].onSubmit()
+      this.loading = true
+      this.$refs['user-info-form'].onSubmit().then(res => {
+        // 存储用户信息
+        setUserInfo(res)
+        this.updateUserInfo(res)
+
+        // 跳转
+        this.$router.push({ name: 'get-red-wine' })
+      }).catch(err => {
+        console.log(err)
+      }).finally(() => {
+        this.loading = false
+      })
     }
   }
 }

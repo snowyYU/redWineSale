@@ -2,8 +2,8 @@
   <van-popup class="customer-service-box" v-model="isShow" closeable close-icon="clear" safe-area-inset-bottom>
     <div class="customer-service-box__title">客服经理电话</div>
     <div class="customer-service-box__icon"></div>
-    <div class="customer-service-box__phone">{{customerServicePhone}}</div>
-    <a class="call-button" :href="'tel:' + customerServicePhone">
+    <div class="customer-service-box__phone">{{localData.customerServicePhone}}</div>
+    <a class="call-button" :href="'tel:' + localData.customerServicePhone">
       <van-button text="立即拨打" color="#d62435" />
     </a>
   </van-popup>
@@ -21,7 +21,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['customerServicePhone']),
+    ...mapState(['localData']),
     isShow: {
       get () {
         return this.show

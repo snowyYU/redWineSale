@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomePage from '../views/HomePage.vue'
+import { getUserInfo } from '@/utils'
 
 Vue.use(VueRouter)
 
@@ -56,10 +57,22 @@ router.beforeEach((to, from, next) => {
   // } else {
   //   next() // 确保一定要调用 next()
   // }
+
+  // 修改网站标题
   if (document.title !== to.meta.title) {
     document.title = to.meta.title || ''
   }
-  next()
+
+  // 判断是否填写个人信息
+  if (to.name !== 'home-page') {
+    if (getUserInfo()) {
+      next()
+    } else {
+      next({ name: 'home-page' })
+    }
+  } else {
+    next()
+  }
 })
 
 export default router

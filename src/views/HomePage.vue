@@ -4,7 +4,10 @@
     <div class="product-image">
       <div class="product-image__item">
         <van-image class="product-image__inner" :src="require('../assets/img/product/long_1.jpg')" />
-        <van-button class="product-image__button" ref="buyNowBtn" @click="handleShowUserInfoBox"></van-button>
+        <van-button class="product-image__button" ref="buyNowBtn" @click="handleShowUserInfoBox">
+          <span class="text">立即免费领酒</span>
+          <span class="tips">每人限领1瓶</span>
+        </van-button>
       </div>
       <van-image v-for="item in 12" :key="item" class="product-image__inner" :src="require('../assets/img/product/long_' + (item + 1) + '.jpg')" />
     </div>
@@ -21,7 +24,8 @@
 
 <script>
 import _ from 'lodash'
-import moment from 'moment'
+import { getUserInfo } from '@/utils'
+import { mapState } from 'vuex'
 import UserInfoBox from '@/components/HomePage/UserInfoBox'
 
 export default {
@@ -34,14 +38,13 @@ export default {
       // 底部悬浮按钮显示状态
       bottomBtnShow: false,
       // 用户信息表单显示状态
-      userInfoBoxShow: false,
-      // 截止时间
-      limitTime: moment(moment().add(3, 'd')).format('M月DD日')
+      userInfoBoxShow: false
     }
   },
   computed: {
+    ...mapState(['localData']),
     buttonText () {
-      return '立即免费领取（' + this.limitTime + '截止）'
+      return '立即免费领取（' + this.localData.limitTime + '截止）'
     }
   },
   mounted () {
@@ -68,6 +71,11 @@ export default {
     },
     // 显示用户信息表单事件
     handleShowUserInfoBox () {
+      if (getUserInfo()) {
+        // 跳转
+        this.$router.push({ name: 'get-red-wine' })
+        return
+      }
       this.userInfoBoxShow = true
     }
   }
@@ -97,11 +105,38 @@ export default {
         width: 598px;
         height: 103px;
         border-radius: 103px;
+        font-size: 0;
+        line-height: normal;
         background-image: url('../assets/img/bg-buy-now-button.png');
         background-repeat: no-repeat;
         background-position: center;
         background-size: 100% 100%;
         box-shadow: 0px 0px 7px 0px rgba(146, 7, 7, 0.75);
+        overflow: hidden;
+
+        .van-button__text {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          height: 100%;
+
+          .text {
+            display: inline-block;
+            margin-top: 18px;
+            margin-bottom: 17px;
+            font-size: 34px;
+            color: #a21a1a;
+            line-height: 1;
+            text-shadow: 0px 0px 3.84px rgba(236, 209, 84, 0.75);
+          }
+
+          .tips {
+            display: inline-block;
+            font-size: 22px;
+            color: #a21a1a;
+            line-height: 1;
+          }
+        }
       }
     }
 
@@ -156,6 +191,20 @@ export default {
           height: 103px;
           border-radius: 103px;
           box-shadow: 0px 0px 7px 0px rgba(146, 7, 7, 0.75);
+
+          .van-button__text {
+
+            .text {
+              margin-top: 18px;
+              margin-bottom: 17px;
+              font-size: 34px;
+              text-shadow: 0px 0px 3.84px rgba(236, 209, 84, 0.75);
+            }
+
+            .tips {
+              font-size: 22px;
+            }
+          }
         }
       }
     }
