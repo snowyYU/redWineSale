@@ -88,3 +88,28 @@ export function getUserInfo () {
 export function setUserInfo (userInfo) {
   setData('userInfo', userInfo)
 }
+/**
+ * 获取当前url参数值
+ * @param {*} query
+ * @param {*} _url
+ */
+export function getUrlParams (query, _url) {
+  const url = _url || window.location.href
+  const paramsString = url.indexOf('?') > -1 ? url.substring(url.indexOf('?') + 1, url.length).split('&') : []
+  let paramsObj = {}
+  paramsString.forEach((item, index) => {
+    paramsObj[item.substring(0, item.indexOf('='))] = item.substring(item.indexOf('=') + 1, item.length).split('#')[0]
+  })
+
+  if (Object.prototype.toString.call(query).slice(8, -1) === 'Array') {
+    return paramsObj
+  }
+
+  const returnValue = paramsObj[query]
+
+  if (typeof (returnValue) === 'undefined') {
+    return ''
+  } else {
+    return returnValue
+  }
+}
