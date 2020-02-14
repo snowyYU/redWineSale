@@ -87,6 +87,7 @@ export default {
         this.$toast('请填写准确的详细地址')
         return false
       }
+      console.log('verify success')
       return true
     },
     // 表单初始化

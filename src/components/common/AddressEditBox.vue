@@ -1,4 +1,5 @@
 <template>
+<div>
   <van-popup
     class="address-edit-box"
     v-model="isShow"
@@ -16,6 +17,8 @@
     <!-- 确认按钮 -->
     <van-button text="确认修改" color="#d62435" :loading="loading" loading-text="加载中..." @click="onConfirm" />
   </van-popup>
+</div>
+
 </template>
 
 <script>
