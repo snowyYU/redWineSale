@@ -38,6 +38,7 @@
 import { setUserInfo } from '@/utils'
 import { TimelineLite } from 'gsap'
 import { mapState, mapActions } from 'vuex'
+import { saveAddress } from '@/api'
 import userInfoForm from '@/components/common/userInfoForm'
 import ProgressBar from '@/components/HomePage/ProgressBar'
 import SubmitBar from '@/components/HomePage/SubmitBar'
@@ -98,21 +99,48 @@ export default {
       // 清空表单
       // this.$refs['user-info-form'].clearForm()
     },
-    // 提交表单
-    onSubmit () {
+    // 将区域数据结构
+    areaFormat (area) {
+      return {
+        // province: "",
+        // city: "",
+        // area: ""
+      }
+    },
+    // 保存用户收货地址接口
+    saveAddress (formData) {
       this.loading = true
-      this.$refs['user-info-form'].onSubmit().then(res => {
-        // 存储用户信息
-        setUserInfo(res)
-        this.updateUserInfo(res)
-
-        // 跳转
-        this.$router.push({ name: 'get-red-wine' })
+      let data = {
+        // openId: ,
+        userName: formData.name,
+        phone: formData.phone,
+        ...this.areaFormat(formData.area),
+        address: formData.address
+      }
+      saveAddress(data).then(res => {
+        console.log(res)
+        if (res.data.code === 200) {
+          // 存储用户信息
+          setUserInfo(formData)
+          this.updateUserInfo(formData)
+          // 跳转
+          this.$router.push({ name: 'get-red-wine' })
+        } else {
+          console.log(res)
+        }
       }).catch(err => {
-        console.log(err)
+        console.error(err)
       }).finally(() => {
         this.loading = false
       })
+    },
+    // 提交表单
+    onSubmit () {
+      this.$refs['user-info-form'].onSubmit().then(res => {
+        this.saveAddress(res)
+      }).catch(err => {
+        console.log(err)
+      }).finally(() => {})
     }
   }
 }

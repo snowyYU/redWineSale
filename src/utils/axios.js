@@ -5,6 +5,7 @@
 import axios from 'axios'
 // import querystring from 'querystring'
 
+const baseUrl = 'https://yizhihj.com'
 // Add a request interceptor
 axios.interceptors.request.use(function (config) {
   // Do something before request is sent
@@ -12,6 +13,7 @@ axios.interceptors.request.use(function (config) {
   console.log('请求地址:', config.url)
   console.log('请求参数:', config.data)
 
+  config.url = baseUrl + config.url
   // config.transformRequest = [function (data) {
   //   return querystring.stringify(data)
   // }]

@@ -6,10 +6,10 @@ import { getUserInfo } from '@/utils'
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    redirect: '/home'
-  },
+  // {
+  //   path: '/',
+  //   redirect: '/home'
+  // },
   {
     path: '/home',
     name: 'home-page',
