@@ -24,7 +24,7 @@
 
 <script>
 import _ from 'lodash'
-import { getUserInfo } from '@/utils'
+import { getUserInfo, getClientEvn, alipayAuth, wechatAuth } from '@/utils'
 import { mapState } from 'vuex'
 import UserInfoBox from '@/components/HomePage/UserInfoBox'
 
@@ -69,8 +69,10 @@ export default {
         this.bottomBtnShow = false
       }
     },
+
     // 显示用户信息表单事件
     handleShowUserInfoBox () {
+      // wechatAuth()
       if (getUserInfo()) {
         // 跳转
         this.$router.push({ name: 'get-red-wine' })

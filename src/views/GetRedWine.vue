@@ -62,7 +62,7 @@ export default {
     },
     // 提交订单
     onSubmit () {
-      this.$router({ name: 'order-detai' })
+      this.$router.push({ name: 'order-detail' })
     }
   }
 }
