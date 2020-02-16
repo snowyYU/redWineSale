@@ -142,8 +142,10 @@ export default {
     // 提交表单
     onSubmit () {
       this.$refs['user-info-form'].onSubmit().then(res => {
-        this.$router.push({ name: 'get-red-wine' })
-        // this.saveAddress(res)
+        // setUserInfo(res)
+        // this.updateUserInfo(res)
+        // this.$router.push({ name: 'get-red-wine' })
+        this.saveAddress(res)
       }).catch(err => {
         console.log(err)
       }).finally(() => {})
@@ -218,7 +220,7 @@ export default {
         background-color: rgba(0, 0, 0, .1);
       }
 
-      &:not(:last-child) {
+      &:not(.textarea) {
         margin-bottom: 36px;
         padding: 0 27px;
         height: 75px;
@@ -297,7 +299,7 @@ export default {
       .van-field {
         border-radius: 9px;
 
-        &:not(:last-child) {
+        &:not(.textarea) {
           margin-bottom: 36px;
           padding: 0 27px;
           height: 75px;

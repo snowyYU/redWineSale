@@ -143,7 +143,7 @@ export default {
         background-color: rgba(0, 0, 0, .1);
       }
 
-      &:not(:last-child) {
+      &:not(.textarea) {
         margin-bottom: 32px;
         padding: 0 15px;
         height: 65px;
@@ -213,7 +213,7 @@ export default {
       .van-field {
         border-radius: 8px;
 
-        &:not(:last-child) {
+        &:not(.textarea) {
           margin-bottom: 32px;
           padding: 0 15px;
           height: 65px;
