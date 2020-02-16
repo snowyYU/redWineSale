@@ -35,7 +35,8 @@
 </template>
 
 <script>
-import { setUserInfo } from '@/utils'
+import _ from 'lodash'
+import { setUserInfo, getToken } from '@/utils'
 import { TimelineLite } from 'gsap'
 import { mapState, mapActions } from 'vuex'
 import { saveAddress } from '@/api'
@@ -65,7 +66,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['localData']),
+    ...mapState(['localData', 'clientEvn']),
     isShow: {
       get () {
         return this.show
@@ -100,25 +101,29 @@ export default {
       // this.$refs['user-info-form'].clearForm()
     },
     // 将区域数据结构
-    areaFormat (area) {
+    areaParse (area) {
+      let arr = area.split('/')
+      if (_.isEmpty(arr[2])) {
+        arr.splice(1, 0, arr[0])
+      }
       return {
-        // province: "",
-        // city: "",
-        // area: ""
+        province: arr[0],
+        city: arr[1],
+        area: arr[2]
       }
     },
     // 保存用户收货地址接口
     saveAddress (formData) {
       this.loading = true
       let data = {
-        // openId: ,
+        type: this.clientEvn,
+        token: getToken(),
         userName: formData.name,
         phone: formData.phone,
-        ...this.areaFormat(formData.area),
+        ...this.areaParse(formData.area),
         address: formData.address
       }
       saveAddress(data).then(res => {
-        console.log(res)
         if (res.data.code === 200) {
           // 存储用户信息
           setUserInfo(formData)
@@ -137,7 +142,8 @@ export default {
     // 提交表单
     onSubmit () {
       this.$refs['user-info-form'].onSubmit().then(res => {
-        this.saveAddress(res)
+        this.$router.push({ name: 'get-red-wine' })
+        // this.saveAddress(res)
       }).catch(err => {
         console.log(err)
       }).finally(() => {})

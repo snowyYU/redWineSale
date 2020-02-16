@@ -1,5 +1,5 @@
 <template>
-  <van-submit-bar :class="['fixed-submit-bar', { 'tag': productType !== '1' }]" button-text="立即领取" button-type="default" safe-area-inset-bottom @submit="onSubmit">
+  <van-submit-bar :class="['fixed-submit-bar', { 'tag': productType !== '1' }]" :loading="loading" button-text="立即领取" button-type="default" safe-area-inset-bottom @submit="onSubmit">
     <div class="tips-text">{{limitTime}}后，价格恢复¥{{localData.original}}</div>
     <div class="price-text">
       <div class="unit-price">
@@ -18,6 +18,10 @@ import { list } from '@/utils/localData'
 export default {
   name: 'fixed-submit-bar',
   props: {
+    loading: {
+      type: Boolean,
+      default: false
+    },
     productType: {
       type: String,
       default: '1'

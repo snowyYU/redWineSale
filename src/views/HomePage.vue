@@ -24,7 +24,8 @@
 
 <script>
 import _ from 'lodash'
-import { getUserInfo, getClientEvn, alipayAuth, wechatAuth } from '@/utils'
+import { getUserInfo, alipayAuth, wechatAuth, getUrl, setToken, getToken } from '@/utils'
+import { getTokenByCode } from '@/api'
 import { mapState } from 'vuex'
 import UserInfoBox from '@/components/HomePage/UserInfoBox'
 
@@ -42,7 +43,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['localData']),
+    ...mapState(['localData', 'clientEvn']),
     buttonText () {
       return '立即免费领取（' + this.localData.limitTime + '截止）'
     }
@@ -53,6 +54,18 @@ export default {
      * _.throttle() 节流函数，100毫秒执行一次
      */
     window.onscroll = _.throttle(this.handleScrollEvent, 100)
+
+    if (!_.isEmpty(getToken())) {
+      return
+    }
+
+    if (_.isEmpty(this.$route.query)) {
+      this.getCode()
+    } else {
+      if (this.clientEvn > 0) {
+        this.getTokenByCode(this.$route.query.code, this.clientEvn)
+      }
+    }
   },
   beforeDestroy () {
     // 取消监听滚动事件
@@ -70,14 +83,47 @@ export default {
       }
     },
 
+    // 判断客户端环境获取用户code
+    getCode () {
+      switch (this.clientEvn) {
+        case 0:
+          // 浏览器环境
+          break
+        case 1:
+          // 微信环境
+          wechatAuth(this.localData.wxAppId, getUrl(), 'code', 'snsapi_base')
+          break
+        case 2:
+          // 支付宝环境
+          alipayAuth(this.localData.aliAppId, 'auth_base', getUrl())
+          break
+      }
+    },
+
+    // 获取Token
+    getTokenByCode (code, type) {
+      this.l = true
+      getTokenByCode({ code, type }).then(res => {
+        if (res.data.code === 200) {
+          setToken(res.data.body.token)
+        } else {
+          console.log(res)
+        }
+      }).catch(err => {
+        console.log(err)
+      }).finally(() => {
+        this.l = false
+      })
+    },
+
     // 显示用户信息表单事件
     handleShowUserInfoBox () {
       // wechatAuth()
-      if (getUserInfo()) {
-        // 跳转
-        this.$router.push({ name: 'get-red-wine' })
-        return
-      }
+      // if (getUserInfo()) {
+      //   // 跳转
+      //   this.$router.push({ name: 'get-red-wine' })
+      //   return
+      // }
       this.userInfoBoxShow = true
     }
   }

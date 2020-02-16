@@ -5,7 +5,8 @@ import moment from 'moment'
 import {
   SET_LOCAL_DATA,
   SET_USER_INFO,
-  SET_PROGRESS_BOX_SHOW
+  SET_PROGRESS_BOX_SHOW,
+  SET_CLIENT_EVN
 } from '@/store/mutation-types'
 
 Vue.use(Vuex)
@@ -14,6 +15,10 @@ export default new Vuex.Store({
   state: {
     // 本地数据
     localData: {
+      // 微信appId
+      wxAppId: 'wx1d4a1163544ae273',
+      // 支付宝appId
+      aliAppId: '',
       // 商品名
       name: '和平鸽干红葡萄酒',
       // 剩余时间
@@ -79,7 +84,10 @@ export default new Vuex.Store({
       // 详细地址
       address: ''
     },
-    progressBoxShow: false
+    // 提示弹窗显示状态
+    progressBoxShow: false,
+    // 浏览器环境
+    clientEvn: -1
   },
   mutations: {
     [SET_LOCAL_DATA] (state, localData) {
@@ -90,6 +98,9 @@ export default new Vuex.Store({
     },
     [SET_PROGRESS_BOX_SHOW] (state, progressBoxShow) {
       state.progressBoxShow = progressBoxShow
+    },
+    [SET_CLIENT_EVN] (state, clientEvn) {
+      state.clientEvn = clientEvn
     }
   },
   actions: {
@@ -101,6 +112,9 @@ export default new Vuex.Store({
     },
     updateProgressBoxShow ({ commit }, progressBoxShow) {
       commit(SET_PROGRESS_BOX_SHOW, progressBoxShow)
+    },
+    updateClientEvn ({ commit }, clientEvn) {
+      commit(SET_CLIENT_EVN, clientEvn)
     }
   },
   modules: {

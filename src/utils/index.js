@@ -61,13 +61,13 @@ export function clearData () {
 
 /**
  * 获取客户端环境
- * @returns {Number} 0.浏览器 1.支付宝 2.微信
+ * @returns {Number} 0.浏览器 1.微信 2.支付宝
  */
 export function getClientEvn () {
   let userAgent = navigator.userAgent.toLowerCase()
-  if (userAgent.indexOf('alipay') > -1) {
+  if (userAgent.indexOf('micromessenger') > -1) {
     return 1
-  } else if (userAgent.indexOf('micromessenger') > -1) {
+  } else if (userAgent.indexOf('alipay') > -1) {
     return 2
   } else {
     return 0
@@ -87,6 +87,21 @@ export function getUserInfo () {
  */
 export function setUserInfo (userInfo) {
   setData('userInfo', userInfo)
+}
+
+/**
+ * 获取Token
+ */
+export function getToken () {
+  return sessionStorage.getItem('token')
+}
+
+/**
+ * 存储Token
+ * @param {*} token
+ */
+export function setToken (token) {
+  sessionStorage.setItem('token', token)
 }
 
 /**
@@ -140,4 +155,12 @@ export function alipayAuth (appId, scope, redirectUri, state) {
   // }).join('&')
 
   location.href = url + '?' + queryString
+}
+
+/**
+ * 获取不带参数的url
+ */
+export function getUrl () {
+  let url = location.href
+  return url.split('?')[0]
 }

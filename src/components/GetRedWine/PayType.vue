@@ -11,27 +11,27 @@
 </template>
 
 <script>
-import { getClientEvn } from '@/utils'
+import { mapState } from 'vuex'
 
 export default {
   name: 'PayType',
   props: {
     payType: {
       type: String,
-      default: '1'
+      default: '2'
     }
   },
   data () {
     return {
       list: [
         {
-          id: '1',
+          id: '2',
           label: '支付宝支付',
           icon: require('../../assets/img/alipay.png'),
           show: true
         },
         {
-          id: '2',
+          id: '1',
           label: '微信支付',
           icon: require('../../assets/img/weChat.png'),
           show: true
@@ -39,25 +39,8 @@ export default {
       ]
     }
   },
-  created () {
-    switch (getClientEvn()) {
-      case 0:
-        break
-      case 1:
-        // 支付宝
-        this.$set(this.list, 1, Object.assign({}, this.list[1], { show: false }))
-        this.payTypeRadio = '1'
-        break
-      case 2:
-        // 微信
-        this.$set(this.list, 0, Object.assign({}, this.list[0], { show: false }))
-        this.payTypeRadio = '2'
-        break
-      default:
-        break
-    }
-  },
   computed: {
+    ...mapState(['clientEvn']),
     payTypeRadio: {
       get () {
         return this.payType
@@ -67,6 +50,25 @@ export default {
           this.$emit('update:payType', val)
         }
       }
+    }
+  },
+  created () {
+    switch (this.clientEvn) {
+      case 0:
+        // 浏览器
+        break
+      case 1:
+        // 微信
+        this.$set(this.list, 0, Object.assign({}, this.list[0], { show: false }))
+        this.payTypeRadio = '1'
+        break
+      case 2:
+        // 支付宝
+        this.$set(this.list, 1, Object.assign({}, this.list[1], { show: false }))
+        this.payTypeRadio = '2'
+        break
+      default:
+        break
     }
   },
   methods: {

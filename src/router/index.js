@@ -64,15 +64,16 @@ router.beforeEach((to, from, next) => {
   }
 
   // 判断是否填写个人信息
-  if (to.name !== 'home-page') {
-    if (getUserInfo()) {
-      next()
-    } else {
-      next({ name: 'home-page' })
-    }
-  } else {
-    next()
-  }
+  // if (to.name !== 'home-page') {
+  //   if (getUserInfo()) {
+  //     next()
+  //   } else {
+  //     next({ name: 'home-page' })
+  //   }
+  // } else {
+  //   next()
+  // }
+  next()
 })
 
 export default router

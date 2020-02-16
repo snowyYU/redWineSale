@@ -9,7 +9,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { getUserInfo } from '@/utils'
+import { getClientEvn, getUserInfo } from '@/utils'
 import ProgressBox from '@/components/common/ProgressBox'
 
 export default {
@@ -28,9 +28,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['updateUserInfo', 'updateProgressBoxShow'])
+    ...mapActions(['updateClientEvn', 'updateUserInfo', 'updateProgressBoxShow'])
   },
   created () {
+    // 存储浏览器环境
+    this.updateClientEvn(getClientEvn())
+
+    // 判断是否保存用户信息
     let userInfo = getUserInfo()
     if (userInfo) {
       this.updateUserInfo(userInfo)

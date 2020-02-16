@@ -1,3 +1,4 @@
 export const SET_LOCAL_DATA = 'SET_LOCAL_DATA'
 export const SET_USER_INFO = 'SET_USER_INFO'
 export const SET_PROGRESS_BOX_SHOW = 'SET_PROGRESS_BOX_SHOW'
+export const SET_CLIENT_EVN = 'SET_CLIENT_EVN'
