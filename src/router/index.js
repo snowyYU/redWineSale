@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomePage from '../views/HomePage.vue'
-import { getUserInfo } from '@/utils'
+// import { getUserInfo } from '@/utils'
 
 Vue.use(VueRouter)
 
