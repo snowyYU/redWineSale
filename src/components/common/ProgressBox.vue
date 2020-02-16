@@ -1,4 +1,5 @@
 <template>
+<div>
   <van-popup class="progress-box" v-model="isShow" :close-on-click-overlay="false" safe-area-inset-bottom>
     <div class="progress-box__title">当前进度</div>
     <div class="progress-box__content">
@@ -11,6 +12,8 @@
       <van-button text="确认支付" color="#d62435" @click="onConfirm" />
     </div>
   </van-popup>
+</div>
+
 </template>
 
 <script>
