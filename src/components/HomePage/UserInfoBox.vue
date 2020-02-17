@@ -36,7 +36,7 @@
 
 <script>
 import _ from 'lodash'
-import { setUserInfo, getToken } from '@/utils'
+import { getToken } from '@/utils'
 import { TimelineLite } from 'gsap'
 import { mapState, mapActions } from 'vuex'
 import { saveAddress } from '@/api'
@@ -126,7 +126,6 @@ export default {
       saveAddress(data).then(res => {
         if (res.data.code === 200) {
           // 存储用户信息
-          setUserInfo(formData)
           this.updateUserInfo(formData)
           // 跳转
           this.$router.push({ name: 'get-red-wine' })
@@ -142,7 +141,6 @@ export default {
     // 提交表单
     onSubmit () {
       this.$refs['user-info-form'].onSubmit().then(res => {
-        // setUserInfo(res)
         // this.updateUserInfo(res)
         // this.$router.push({ name: 'get-red-wine' })
         this.saveAddress(res)

@@ -1,19 +1,18 @@
 <template>
   <van-submit-bar :class="['fixed-submit-bar', { 'tag': productType !== '1' }]" :loading="loading" button-text="立即领取" button-type="default" safe-area-inset-bottom @submit="onSubmit">
-    <div class="tips-text">{{limitTime}}后，价格恢复¥{{localData.original}}</div>
+    <div class="tips-text">{{limitTime}}后，价格恢复¥{{original}}</div>
     <div class="price-text">
       <div class="unit-price">
-        <span>{{localData.label}}:￥{{localData.price}}</span>
-        <span>邮费:¥{{localData.postage}}</span>
+        <span>{{label}}:{{price}}</span>
+        <span>邮费:¥{{postage}}</span>
       </div>
-      <div class="sum-price">￥{{localData.sum}}</div>
+      <div class="sum-price">￥{{sum}}</div>
     </div>
   </van-submit-bar>
 </template>
 
 <script>
-import moment from 'moment'
-import { list } from '@/utils/localData'
+import { mapState } from 'vuex'
 
 export default {
   name: 'fixed-submit-bar',
@@ -27,16 +26,32 @@ export default {
       default: '1'
     }
   },
-  data () {
-    return {
-      // 截止时间
-      limitTime: moment(moment().add(3, 'd')).format('M月DD日'),
-      localData: list[0]
-    }
-  },
-  watch: {
-    productType (val) {
-      this.localData = list[parseInt(val) - 1]
+  computed: {
+    ...mapState(['localData']),
+    limitTime () {
+      return this.localData.limitTime
+    },
+    original () {
+      return this.localData.productList[parseInt(this.productType) - 1].original
+    },
+    label () {
+      return this.localData.productList[parseInt(this.productType) - 1].label
+    },
+    price () {
+      // if (this.productType === '1') {
+      //   return '￥' + this.localData.productList[parseInt(this.productType) - 1].price
+      // } else {
+      //   const { original, sum } = this.localData.productList[parseInt(this.productType) - 1]
+      //   return '-￥' + (original - sum)
+      // }
+      const { original, price } = this.localData.productList[parseInt(this.productType) - 1]
+      return '-￥' + (original - price)
+    },
+    postage () {
+      return this.localData.productList[parseInt(this.productType) - 1].postage
+    },
+    sum () {
+      return this.localData.productList[parseInt(this.productType) - 1].sum
     }
   },
   methods: {

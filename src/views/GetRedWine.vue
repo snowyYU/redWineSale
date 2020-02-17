@@ -14,6 +14,9 @@
 
     <!-- 底部浮动按钮 -->
     <fixed-submit-bar ref="fixed-submit-bar" :productType="productType" :loading="loadingPay" @submit="onSubmit" />
+
+    <!-- 当前进度弹窗 -->
+    <progress-box :show.sync="ProgressBoxShow" />
   </div>
 </template>
 
@@ -24,9 +27,10 @@ import UserAddress from '@/components/common/UserAddress'
 import ProductInfo from '@/components/GetRedWine/ProductInfo'
 import PayType from '@/components/GetRedWine/PayType'
 import FixedSubmitBar from '@/components/GetRedWine/FixedSubmitBar'
+import ProgressBox from '@/components/common/ProgressBox'
 import { mapState, mapActions } from 'vuex'
 import { getAddressInfo, orderPay } from '@/api'
-import { getToken } from '@/utils'
+import { getToken, wxConfig, wxReady, wxError, wxChooseWXPay } from '@/utils'
 
 export default {
   name: 'get-red-wine',
@@ -35,7 +39,8 @@ export default {
     UserAddress,
     ProductInfo,
     PayType,
-    FixedSubmitBar
+    FixedSubmitBar,
+    ProgressBox
   },
   data () {
     return {
@@ -48,7 +53,9 @@ export default {
       // 商品类型
       productType: '1',
       // 支付类型 1.微信 2.支付宝
-      payType: '2'
+      payType: '2',
+      // 提示弹窗显示状态
+      ProgressBoxShow: true
     }
   },
   computed: {
@@ -133,7 +140,28 @@ export default {
       }
       orderPay(data).then(res => {
         if (res.data.code === 200) {
-
+          switch (this.clientEvn) {
+            case 0:
+              // 浏览器
+              break
+            case 1:
+              // 微信
+              const { appId, timeStamp, nonceStr, paySign } = res.data.body
+              wxConfig(appId, timeStamp, nonceStr, paySign)
+              wxReady(() => {
+                wxChooseWXPay(res.data.body).then(res => {
+                  console.log(res)
+                  this.$router.push({ name: 'order-success' })
+                })
+              })
+              wxError((err) => {
+                console.error(err)
+              })
+              break
+            case 2:
+              // 支付宝
+              break
+          }
         } else {
           console.log(res)
         }
@@ -146,7 +174,6 @@ export default {
 
     // 提交订单
     onSubmit () {
-      // this.$router.push({ name: 'order-detail' })
       this.orderPay()
     }
   }

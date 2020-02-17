@@ -2,11 +2,11 @@
   <van-cell-group class="product-info" :border="false">
     <van-cell center>
       <template #title>
-        <span font-size-2 color-3>和平鸽干红葡萄酒</span>
+        <span font-size-2 color-3>{{name}}</span>
       </template>
 
-      <span font-size-3 color-red>￥{{localData.price}}</span>
-      <span font-size-3 color-9>（原价：<del>￥{{localData.original}}</del>)</span>
+      <span font-size-3 color-red>￥{{price}}</span>
+      <span font-size-3 color-9>（原价：<del>￥{{original}}</del>)</span>
     </van-cell>
 
     <van-cell center>
@@ -15,13 +15,13 @@
         <span font-size-1 color-9>（普通快递，24小时内发货）</span>
       </template>
 
-      <span font-size-3 color-9>￥{{localData.postage}}</span>
+      <span font-size-3 color-9>￥{{postage}}</span>
     </van-cell>
   </van-cell-group>
 </template>
 
 <script>
-import { list } from '@/utils/localData'
+import { mapState } from 'vuex'
 
 export default {
   name: 'ProductInfo',
@@ -31,14 +31,19 @@ export default {
       default: '1'
     }
   },
-  data () {
-    return {
-      localData: list[0]
-    }
-  },
-  watch: {
-    productType (val) {
-      this.localData = list[parseInt(val) - 1]
+  computed: {
+    ...mapState(['localData']),
+    name () {
+      return this.localData.name
+    },
+    price () {
+      return this.localData.productList[parseInt(this.productType) - 1].price
+    },
+    original () {
+      return this.localData.productList[parseInt(this.productType) - 1].original
+    },
+    postage () {
+      return this.localData.productList[parseInt(this.productType) - 1].postage
     }
   }
 }

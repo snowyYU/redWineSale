@@ -4,16 +4,16 @@
       <van-cell :class="{ 'active' : productType === '1' }" clickable :border="false" @click="handleTypeChange('1')">
         <template #title>
           <div class="product-info">
-            <div class="user-info" v-show="productType === '1'">收件人  张三（16619840266）</div>
+            <div class="user-info" v-show="productType === '1'">收件人  {{username}}（{{phone}}）</div>
             <div class="product-info__inner">
               <van-image :src="require('../../assets/img/product-1.png')" />
               <div class="product-info__text">
-                <span class="default-text">恭喜您!成功领取680元红酒1瓶！</span>
+                <span class="default-text">恭喜您!成功领取{{price_1}}元红酒1瓶！</span>
               </div>
             </div>
             <div class="tips-text" v-show="productType === '1'">
-              <span class="label">进口跨国的运输费用需要您理解与分担</span>
-              <span class="value">运费￥49</span>
+              <span class="label van-ellipsis">进口跨国的运输费用需要您理解与分担</span>
+              <span class="value van-ellipsis">运费￥49</span>
             </div>
           </div>
         </template>
@@ -23,12 +23,12 @@
       <van-cell :class="{ 'active' : productType === '2' }" clickable :border="false" @click="handleTypeChange('2')">
         <template #title>
           <div class="product-info">
-            <div class="user-info" v-show="productType === '2'">收件人  张三（16619840266）</div>
+            <div class="user-info" v-show="productType === '2'">收件人  {{username}}（{{phone}}）</div>
             <div class="product-info__inner">
               <van-image :src="require('../../assets/img/product-2.png')" />
               <div class="product-info__text bg-gradient">
                 <span class="main-text">69元领2瓶，免邮费</span>
-                <span class="small-text">86%用户选择（官方补贴￥1291）</span>
+                <span class="small-text">赠精美礼盒（官方补贴￥{{price_2}}）</span>
               </div>
             </div>
             <div class="tips-text" v-show="productType === '2'">
@@ -43,12 +43,12 @@
       <van-cell :class="{ 'active' : productType === '3' }" clickable :border="false" @click="handleTypeChange('3')">
         <template #title>
           <div class="product-info">
-            <div class="user-info" v-show="productType === '3'">收件人  张三（16619840266）</div>
+            <div class="user-info" v-show="productType === '3'">收件人  {{username}}（{{phone}}）</div>
             <div class="product-info__inner">
               <van-image :src="require('../../assets/img/product-3.png')" />
               <div class="product-info__text bg-gradient">
-                <span class="main-text">199元领1箱（6瓶），免邮费</span>
-                <span class="small-text">优惠金额最高（官方补贴￥3881）</span>
+                <span class="main-text">199元领6瓶，免邮费</span>
+                <span class="small-text">赠精美礼盒（官方补贴￥{{price_6}}）</span>
               </div>
             </div>
             <div class="tips-text" v-show="productType === '3'">
@@ -64,6 +64,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'product-list',
   props: {
@@ -74,6 +76,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['localData', 'userInfo']),
     productTypeRadio: {
       get () {
         return this.productType
@@ -83,6 +86,26 @@ export default {
           this.$emit('update:productType', val)
         }
       }
+    },
+    username () {
+      if (this.userInfo.name && this.userInfo.name.length > 5) {
+        return this.userInfo.name.substr(0, 5) + '...'
+      }
+      return this.userInfo.name || ''
+    },
+    phone () {
+      return this.userInfo.phone
+    },
+    price_1 () {
+      return this.localData.productList[0].original
+    },
+    price_2 () {
+      const { original, sum } = this.localData.productList[1]
+      return original - sum
+    },
+    price_6 () {
+      const { original, sum } = this.localData.productList[2]
+      return original - sum
     }
   },
   methods: {
@@ -176,6 +199,10 @@ export default {
               justify-content: center;
               flex-direction: column;
               height: 100%;
+
+              &:not(.bg-gradient) {
+                margin-left: -15px;
+              }
 
               &.bg-gradient {
                 background-image: url('../../assets/img/bg-gradient-red.png');
@@ -308,6 +335,10 @@ export default {
                 justify-content: center;
                 flex-direction: column;
                 height: 100%;
+
+                &:not(.bg-gradient) {
+                  margin-left: -15px;
+                }
 
                 &.bg-gradient {
                   background-image: url('../../assets/img/bg-gradient-red.png');

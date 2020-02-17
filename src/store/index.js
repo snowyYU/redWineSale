@@ -5,7 +5,6 @@ import moment from 'moment'
 import {
   SET_LOCAL_DATA,
   SET_USER_INFO,
-  SET_PROGRESS_BOX_SHOW,
   SET_CLIENT_EVN
 } from '@/store/mutation-types'
 
@@ -20,7 +19,7 @@ export default new Vuex.Store({
       // 支付宝appId
       aliAppId: '',
       // 商品名
-      name: '和平鸽干红葡萄酒',
+      name: '拉德斯王菲本顿干红葡萄酒',
       // 剩余时间
       limitTime: moment(moment().add(3, 'd')).format('M月DD日'),
       // 已售比例(%)
@@ -31,9 +30,9 @@ export default new Vuex.Store({
           // 第一款（1瓶）
           id: '1',
           // 原价
-          original: 680,
+          original: 1388,
           // 文案
-          label: '1瓶价格',
+          label: '1瓶补贴',
           // 现价
           price: 0,
           // 邮费
@@ -45,9 +44,9 @@ export default new Vuex.Store({
           // 第二款（2瓶）
           id: '2',
           // 原价
-          original: 680 * 2,
+          original: 1388 * 2,
           // 文案
-          label: '2瓶补贴价',
+          label: '2瓶补贴',
           // 现价
           price: 69,
           // 邮费
@@ -59,9 +58,9 @@ export default new Vuex.Store({
           // 第三款（6瓶）
           id: '3',
           // 原价
-          original: 680 * 6,
+          original: 1388 * 6,
           // 文案
-          label: '6瓶补贴价',
+          label: '6瓶补贴',
           // 现价
           price: 199,
           // 邮费
@@ -84,8 +83,6 @@ export default new Vuex.Store({
       // 详细地址
       address: ''
     },
-    // 提示弹窗显示状态
-    progressBoxShow: false,
     // 浏览器环境
     clientEvn: -1
   },
@@ -95,9 +92,6 @@ export default new Vuex.Store({
     },
     [SET_USER_INFO] (state, userInfo) {
       state.userInfo = userInfo
-    },
-    [SET_PROGRESS_BOX_SHOW] (state, progressBoxShow) {
-      state.progressBoxShow = progressBoxShow
     },
     [SET_CLIENT_EVN] (state, clientEvn) {
       state.clientEvn = clientEvn
@@ -109,9 +103,6 @@ export default new Vuex.Store({
     },
     updateUserInfo ({ commit }, userInfo) {
       commit(SET_USER_INFO, userInfo)
-    },
-    updateProgressBoxShow ({ commit }, progressBoxShow) {
-      commit(SET_PROGRESS_BOX_SHOW, progressBoxShow)
     },
     updateClientEvn ({ commit }, clientEvn) {
       commit(SET_CLIENT_EVN, clientEvn)

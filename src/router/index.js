@@ -6,15 +6,15 @@ import HomePage from '../views/HomePage.vue'
 Vue.use(VueRouter)
 
 const routes = [
+  // {
+  //   path: '/',
+  //   redirect: '/home'
+  // },
   {
     path: '/',
-    redirect: '/home'
-  },
-  {
-    path: '/home',
     name: 'home-page',
     component: HomePage,
-    meta: { title: '恭喜获得￥680红酒一瓶' }
+    meta: { title: '恭喜获得￥1388进口红酒1瓶' }
   },
   {
     path: '/getRedWine',
@@ -23,15 +23,22 @@ const routes = [
     meta: { title: '领取进口红酒' }
   },
   {
-    path: '/orderDetail',
-    name: 'order-detail',
-    component: () => import(/* webpackChunkName: "OrderDetail" */ '../views/OrderDetail.vue'),
+    path: '/orderSuccess',
+    name: 'order-success',
+    component: () => import(/* webpackChunkName: "orderSuccess" */ '../views/OrderSuccess.vue'),
     meta: { title: '订单详情' }
   },
   {
-    path: '*',
-    redirect: '/home'
+    path: '/orderFailure',
+    name: 'order-failure',
+    component: () => import(/* webpackChunkName: "orderFailure" */ '../views/OrderFailure.vue'),
+    meta: { title: '订单详情' }
   }
+  // ,
+  // {
+  //   path: '*',
+  //   redirect: '/home'
+  // }
 ]
 
 const router = new VueRouter({

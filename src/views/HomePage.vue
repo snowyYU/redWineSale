@@ -9,7 +9,8 @@
           <span class="tips">每人限领1瓶</span>
         </van-button>
       </div>
-      <van-image v-for="item in 12" :key="item" class="product-image__inner" :src="require('../assets/img/product/long_' + (item + 1) + '.jpg')" />
+      <!-- <van-image class="product-image__inner" :src="require('../assets/img/product/long_2.jpg')" /> -->
+      <van-image v-for="item in 13" :key="item" class="product-image__inner" :src="require('../assets/img/product/long_' + (item + 1) + '.jpg')" />
     </div>
 
     <!-- 底部悬浮按钮 -->
@@ -24,7 +25,7 @@
 
 <script>
 import _ from 'lodash'
-import { getUserInfo, alipayAuth, wechatAuth, getUrl, setToken, getToken } from '@/utils'
+import { alipayAuth, wechatAuth, getUrl, setToken, getToken } from '@/utils'
 import { getTokenByCode } from '@/api'
 import { mapState } from 'vuex'
 import UserInfoBox from '@/components/HomePage/UserInfoBox'
@@ -118,12 +119,6 @@ export default {
 
     // 显示用户信息表单事件
     handleShowUserInfoBox () {
-      // wechatAuth()
-      // if (getUserInfo()) {
-      //   // 跳转
-      //   this.$router.push({ name: 'get-red-wine' })
-      //   return
-      // }
       this.userInfoBoxShow = true
     }
   }

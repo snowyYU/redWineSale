@@ -48,7 +48,7 @@ vueTouch.prototype = {
         if (disY > 10) {
           this.touchType === 'swipedown' && this.vueCallBack(this.binding.value, e)// 下滑
         }
-        if(disY < -10) {
+        if (disY < -10) {
           this.touchType === 'swipeup' && this.vueCallBack(this.binding.value, e)// 上滑
         }
       }
@@ -66,37 +66,37 @@ vueTouch.prototype = {
 export default (Vue) => {
   Vue.directive('tap', {// 点击事件
     bind: function (el, binding) {
-      new vueTouch (el, binding, 'tap')
+      new vueTouch(el, binding, 'tap')
     }
   })
   Vue.directive('swipe', {// 滑动事件
     bind: function (el, binding) {
-      new vueTouch (el, binding,'swipe')
+      new vueTouch(el, binding, 'swipe')
     }
   })
   Vue.directive('swipeleft', {// 左滑事件
     bind: function (el, binding) {
-      new vueTouch (el, binding,'swipeleft')
+      new vueTouch(el, binding, 'swipeleft')
     }
   })
   Vue.directive('swiperight', {// 右滑事件
     bind: function (el, binding) {
-      new vueTouch (el, binding,'swiperight')
+      new vueTouch(el, binding, 'swiperight')
     }
   })
   Vue.directive('swipedown', {// 下滑事件
     bind: function (el, binding) {
-      new vueTouch (el, binding,'swipedown')
+      new vueTouch(el, binding, 'swipedown')
     }
   })
   Vue.directive('swipeup', {// 上滑事件
     bind: function (el, binding) {
-      new vueTouch (el, binding,'swipeup')
+      new vueTouch(el, binding, 'swipeup')
     }
   })
   Vue.directive('longtap', {// 长按事件
     bind: function (el, binding) {
-      new vueTouch (el, binding,'longtap')
+      new vueTouch(el, binding, 'longtap')
     }
   })
 }
