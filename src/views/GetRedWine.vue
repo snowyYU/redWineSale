@@ -16,7 +16,7 @@
     <fixed-submit-bar ref="fixed-submit-bar" :productType="productType" :loading="loadingPay" @submit="onSubmit" />
 
     <!-- 当前进度弹窗 -->
-    <progress-box :show.sync="ProgressBoxShow" />
+    <progress-box :show.sync="ProgressBoxShow" @confirm="orderPay" @cancel="confirmQuit"/>
   </div>
 </template>
 
@@ -55,7 +55,7 @@ export default {
       // 支付类型 1.微信 2.支付宝
       payType: '2',
       // 提示弹窗显示状态
-      ProgressBoxShow: true
+      ProgressBoxShow: false
     }
   },
   computed: {
@@ -70,6 +70,18 @@ export default {
     window.onresize = _.throttle(this.useSafePadding, 100)
 
     this.getAddressInfo()
+    // 开始做页面的回退拦截
+    // 如果支持 popstate 一般移动端都支持了
+    if (window.history && window.history.pushState) {
+      // 往历史记录里面添加一条新的当前页面的url
+      history.pushState(null, null, document.URL)
+      // 给 popstate 绑定一个方法 监听页面刷新
+      window.addEventListener('popstate', this.backConfirm, false)// false阻止默认事件
+    }
+  },
+  // 页面销毁时，取消监听。否则其他vue路由页面也会被监听
+  destroyed () {
+    window.removeEventListener('popstate', this.backConfirm, false)// false阻止默认事件
   },
   beforeDestroy () {
     // 取消监听窗口尺寸变化
@@ -82,7 +94,12 @@ export default {
       let space = fixedSubmitBar.offsetTop - fixedSubmitBar.parentElement.offsetHeight - fixedSubmitBar.querySelector('.tips-text').offsetHeight
       this.isSafePadding = (space <= 5)
     },
-
+    backConfirm () {
+      this.ProgressBoxShow = true
+    },
+    confirmQuit () {
+      this.$$router.replace({ name: 'home-page' })
+    },
     // 将区域数据结构
     areaStringify (province, city, area) {
       if (province === city) {
@@ -118,13 +135,13 @@ export default {
       let orderType = ''
       switch (productType) {
         case '1':
-          orderType = ''
+          orderType = 'ONE_BOTTLE'
           break
         case '2':
-          orderType = ''
+          orderType = 'TWO_BOTTLE'
           break
         case '3':
-          orderType = ''
+          orderType = 'SIX_BOTTLE'
           break
       }
       return orderType
