@@ -35,8 +35,7 @@
 </template>
 
 <script>
-import _ from 'lodash'
-import { getToken } from '@/utils'
+import { getToken, areaParse } from '@/utils'
 import { TimelineLite } from 'gsap'
 import { mapState, mapActions } from 'vuex'
 import { saveAddress } from '@/api'
@@ -93,60 +92,60 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['updateUserInfo']),
+    ...mapActions(['updateUserInfo', 'saveVisitRecord', 'updateGlobalOverlayData']),
     // 用户信息弹窗关闭后回调
     handlePopUpClosed () {
       this.percentage = 0
       // 清空表单
       // this.$refs['user-info-form'].clearForm()
     },
-    // 将区域数据结构
-    areaParse (area) {
-      let arr = area.split('/')
-      if (_.isEmpty(arr[2])) {
-        arr.splice(1, 0, arr[0])
-      }
-      return {
-        province: arr[0],
-        city: arr[1],
-        area: arr[2]
-      }
-    },
+
     // 保存用户收货地址接口
     saveAddress (formData) {
       this.loading = true
+      this.updateGlobalOverlayData({ isShow: true, isTransparent: true })
       let data = {
         type: this.clientEvn,
         token: getToken(),
         userName: formData.name,
         phone: formData.phone,
-        ...this.areaParse(formData.area),
+        ...areaParse(formData.area),
         address: formData.address
       }
       saveAddress(data).then(res => {
         if (res.data.code === 200) {
           // 存储用户信息
           this.updateUserInfo(formData)
+
+          // 保存用户访问记录接口
+          let data = {
+            visitType: '2',
+            type: this.clientEvn,
+            token: getToken(),
+            channel: '测试',
+            subChannel: '测试'
+          }
+          this.saveVisitRecord({ data })
+
           // 跳转
           this.$router.push({ name: 'get-red-wine' })
         } else {
-          console.log(res)
+          this.$toast('网络错误')
         }
-      }).catch(err => {
-        console.error(err)
       }).finally(() => {
         this.loading = false
+        this.updateGlobalOverlayData({ isShow: false, isTransparent: true })
       })
     },
     // 提交表单
     onSubmit () {
+      if (this.loading) {
+        return
+      }
+
       this.$refs['user-info-form'].onSubmit().then(res => {
-        // this.updateUserInfo(res)
-        // this.$router.push({ name: 'get-red-wine' })
         this.saveAddress(res)
-      }).catch(err => {
-        console.log(err)
-      }).finally(() => {})
+      })
     }
   }
 }

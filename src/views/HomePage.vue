@@ -10,7 +10,7 @@
         </van-button>
       </div>
       <!-- <van-image class="product-image__inner" :src="require('../assets/img/product/long_2.jpg')" /> -->
-      <van-image v-for="item in 13" :key="item" class="product-image__inner" :src="require('../assets/img/product/long_' + (item + 1) + '.jpg')" />
+      <van-image v-for="item in 13" :key="item" class="product-image__inner" :src="require('../assets/img/product/long_' + (item + 1) + '.jpg')" lazy-load />
     </div>
 
     <!-- 底部悬浮按钮 -->
@@ -25,9 +25,9 @@
 
 <script>
 import _ from 'lodash'
-import { alipayAuth, wechatAuth, getUrl, setToken, getToken } from '@/utils'
+import { alipayAuth, wechatAuth, getUrl, setToken, getToken, buildToken } from '@/utils'
 import { getTokenByCode } from '@/api'
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 import UserInfoBox from '@/components/HomePage/UserInfoBox'
 
 export default {
@@ -56,24 +56,21 @@ export default {
      */
     window.onscroll = _.throttle(this.handleScrollEvent, 100)
 
+    // 判断是否登录
     if (!_.isEmpty(getToken())) {
       return
     }
 
-    // console.log('1323211131', this.$route.query)
-    // console.log('safsdlkfjlksadjlkfjdsj', getUrl())
-
-    // const mark = sessionStorage.getItem('mark')
-    // if (_.isEmpty(this.$route.query) && !mark) {
-    //   sessionStorage.setItem('mark', 1)
-    //   this.getCode()
-    // }
-
+    // 判断url是否有查询参数
     if (_.isEmpty(this.$route.query)) {
+      // 如果不在H5环境下，就跳转授权
       this.getCode()
     } else {
+      // 如果不在H5环境下，就拿code获取token；如果在H5环境下，拿时间戳生成一个Token
       if (this.clientEvn > 0) {
         this.getTokenByCode(this.$route.query.code, this.clientEvn)
+      } else {
+        setToken(buildToken())
       }
     }
   },
@@ -82,6 +79,7 @@ export default {
     window.onscroll = null
   },
   methods: {
+    ...mapActions(['saveVisitRecord']),
     // 监听滚动条事件
     handleScrollEvent () {
       // 获取 立即领取按钮 距离顶部高度和自身高度
@@ -112,17 +110,23 @@ export default {
 
     // 获取Token
     getTokenByCode (code, type) {
-      this.l = true
       getTokenByCode({ code, type }).then(res => {
         if (res.data.code === 200) {
-          setToken(res.data.body.token)
+          const { token } = res.data.body.token
+          setToken(token)
+
+          // 保存用户访问记录接口
+          let data = {
+            visitType: '1',
+            type: this.clientEvn,
+            token,
+            channel: '测试',
+            subChannel: '测试'
+          }
+          this.saveVisitRecord({ data })
         } else {
-          console.log(res)
+          this.$toast('网络错误')
         }
-      }).catch(err => {
-        console.log(err)
-      }).finally(() => {
-        this.l = false
       })
     },
 

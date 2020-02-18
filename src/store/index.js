@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import moment from 'moment'
+import { saveVisitRecord } from '@/api'
 
 import {
   SET_LOCAL_DATA,
   SET_USER_INFO,
-  SET_CLIENT_EVN
+  SET_CLIENT_EVN,
+  SET_GLOBAL_OVERLAY_DATA
 } from '@/store/mutation-types'
 
 Vue.use(Vuex)
@@ -84,7 +86,12 @@ export default new Vuex.Store({
       address: ''
     },
     // 浏览器环境
-    clientEvn: -1
+    clientEvn: -1,
+    // 全局loading遮罩
+    globalOverlayData: {
+      isShow: true,
+      isTransparent: true
+    }
   },
   mutations: {
     [SET_LOCAL_DATA] (state, localData) {
@@ -95,6 +102,9 @@ export default new Vuex.Store({
     },
     [SET_CLIENT_EVN] (state, clientEvn) {
       state.clientEvn = clientEvn
+    },
+    [SET_GLOBAL_OVERLAY_DATA] (state, globalOverlayData) {
+      state.globalOverlayData = globalOverlayData
     }
   },
   actions: {
@@ -106,6 +116,18 @@ export default new Vuex.Store({
     },
     updateClientEvn ({ commit }, clientEvn) {
       commit(SET_CLIENT_EVN, clientEvn)
+    },
+    updateGlobalOverlayShow ({ commit }, globalOverlayData) {
+      commit(SET_GLOBAL_OVERLAY_DATA, globalOverlayData)
+    },
+    saveVisitRecord ({ commit }, obj) {
+      saveVisitRecord(obj.data).then(res => {
+        if (res.data.code === 200) {
+          obj.cb && obj.cb(res)
+        } else {
+          this.$toast('网络错误')
+        }
+      })
     }
   },
   modules: {

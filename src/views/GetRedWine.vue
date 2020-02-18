@@ -30,7 +30,7 @@ import FixedSubmitBar from '@/components/GetRedWine/FixedSubmitBar'
 import ProgressBox from '@/components/common/ProgressBox'
 import { mapState, mapActions } from 'vuex'
 import { getAddressInfo, orderPay } from '@/api'
-import { getToken, wxConfig, wxReady, wxError, wxChooseWXPay } from '@/utils'
+import { getToken, areaStringify, wxConfig, wxReady, wxError, wxChooseWXPay } from '@/utils'
 
 export default {
   name: 'get-red-wine',
@@ -63,13 +63,16 @@ export default {
   },
   mounted () {
     this.useSafePadding()
+
     /**
      * 监听窗口尺寸变化
      * _.throttle() 节流函数，100毫秒执行一次
      */
     window.onresize = _.throttle(this.useSafePadding, 100)
 
+    // 不在H5环境下，获取用户信息
     this.getAddressInfo()
+
     // 开始做页面的回退拦截
     // 如果支持 popstate 一般移动端都支持了
     if (window.history && window.history.pushState) {
@@ -88,7 +91,7 @@ export default {
     window.onresize = null
   },
   methods: {
-    ...mapActions(['updateUserInfo']),
+    ...mapActions(['updateUserInfo', 'saveVisitRecord', 'updateGlobalOverlayData']),
     useSafePadding () {
       let fixedSubmitBar = this.$refs['fixed-submit-bar'].$el
       let space = fixedSubmitBar.offsetTop - fixedSubmitBar.parentElement.offsetHeight - fixedSubmitBar.querySelector('.tips-text').offsetHeight
@@ -100,24 +103,18 @@ export default {
     confirmQuit () {
       this.$router.replace({ name: 'home-page' })
     },
-    // 将区域数据结构
-    areaStringify (province, city, area) {
-      if (province === city) {
-        return `${province}/${area}`
-      }
-      return `${province}/${city}/${area}`
-    },
 
     // 查询用户收货地址
     getAddressInfo () {
       this.loading = true
+      this.updateGlobalOverlayData({ isShow: true, isTransparent: false })
       getAddressInfo({ token: getToken() }).then(res => {
         if (res.data.code === 200) {
           let { userName, phone, province, city, area, address } = res.data.body
           this.updateUserInfo({
             name: userName,
             phone,
-            area: this.areaStringify(province, city, area),
+            area: areaStringify(province, city, area),
             address
           })
         } else {
@@ -127,6 +124,7 @@ export default {
         console.log(err)
       }).finally(() => {
         this.loading = false
+        this.updateGlobalOverlayData({ isShow: false, isTransparent: false })
       })
     },
 
@@ -150,10 +148,13 @@ export default {
     // 支付
     orderPay () {
       this.loadingPay = true
+      this.updateGlobalOverlayData({ isShow: true, isTransparent: true })
       let data = {
         orderType: this.getOrderType(this.productType),
         type: this.payType,
-        token: getToken()
+        token: getToken(),
+        channel: '测试',
+        subChannel: '测试'
       }
       orderPay(data).then(res => {
         if (res.data.code === 200) {
@@ -180,18 +181,34 @@ export default {
               break
           }
         } else {
-          console.log(res)
+          this.$toast('网络错误')
         }
-      }).catch(err => {
-        console.error(err)
       }).finally(() => {
         this.loadingPay = false
+        this.updateGlobalOverlayData({ isShow: false, isTransparent: true })
       })
     },
 
     // 提交订单
     onSubmit () {
-      this.orderPay()
+      if (this.loadingPay) {
+        return
+      }
+
+      this.loadingPay = true
+      this.updateGlobalOverlayData({ isShow: true, isTransparent: true })
+
+      let data = {
+        visitType: '4',
+        type: this.clientEvn,
+        token: getToken(),
+        channel: '测试',
+        subChannel: '测试'
+      }
+      this.saveVisitRecord({ data,
+        cb: () => {
+          this.orderPay()
+        } })
     }
   }
 }

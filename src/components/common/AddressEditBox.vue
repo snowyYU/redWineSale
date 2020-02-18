@@ -22,8 +22,9 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
-import { setUserInfo } from '@/utils'
+import { mapState, mapActions } from 'vuex'
+import { saveAddress } from '@/api'
+import { getToken, areaParse } from '@/utils'
 import userInfoForm from '@/components/common/userInfoForm'
 
 export default {
@@ -48,6 +49,7 @@ export default {
     }
   },
   computed: {
+    ...mapState(['clientEvn']),
     isShow: {
       get () {
         return this.show
@@ -67,21 +69,53 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['updateUserInfo']),
-    // 确认修改
-    onConfirm () {
+    ...mapActions(['updateUserInfo', 'saveVisitRecord', 'updateGlobalOverlayData']),
+    // 保存用户收货地址接口
+    saveAddress (formData) {
       this.loading = true
-      this.$refs['user-info-form'].onSubmit().then(res => {
-        // 存储用户信息
-        setUserInfo(res)
-        this.updateUserInfo(res)
+      this.updateGlobalOverlayData({ isShow: true, isTransparent: true })
+      let data = {
+        type: this.clientEvn,
+        token: getToken(),
+        userName: formData.name,
+        phone: formData.phone,
+        ...areaParse(formData.area),
+        address: formData.address
+      }
+      saveAddress(data).then(res => {
+        if (res.data.code === 200) {
+          // 存储用户信息
+          this.updateUserInfo(formData)
 
-        // 跳转
-        this.$router.push({ name: 'get-red-wine' })
-      }).catch(err => {
-        console.log(err)
+          // 保存用户访问记录接口
+          let data = {
+            visitType: '3',
+            type: this.clientEvn,
+            token: getToken(),
+            channel: '测试',
+            subChannel: '测试'
+          }
+          this.saveVisitRecord({ data })
+
+          // 关闭窗口
+          this.$emit('update:show', false)
+        } else {
+          this.$toast('网络错误')
+        }
       }).finally(() => {
         this.loading = false
+        this.updateGlobalOverlayData({ isShow: false, isTransparent: true })
+      })
+    },
+    // 确认修改
+    onConfirm () {
+      if (this.loading) {
+        return
+      }
+
+      this.$refs['user-info-form'].onSubmit().then(res => {
+        // 存储用户信息
+        this.saveAddress(res)
       })
     }
   }

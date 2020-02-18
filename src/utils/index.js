@@ -3,6 +3,7 @@
  */
 
 import _ from 'lodash'
+import CryptoJS from 'crypto-js'
 
 /**
  * 获取session数据
@@ -126,6 +127,34 @@ export function getToken () {
  */
 export function setToken (token) {
   sessionStorage.setItem('token', token)
+}
+
+/**
+ * 生成Token
+ */
+export function buildToken () {
+  return CryptoJS.MD5(Date.now()).toString()
+}
+
+// 将区域数据结构化
+export function areaStringify (province, city, area) {
+  if (province === city) {
+    return `${province}/${area}`
+  }
+  return `${province}/${city}/${area}`
+}
+
+// 解析区域数据
+export function areaParse (area) {
+  let arr = area.split('/')
+  if (_.isEmpty(arr[2])) {
+    arr.splice(1, 0, arr[0])
+  }
+  return {
+    province: arr[0],
+    city: arr[1],
+    area: arr[2]
+  }
 }
 
 /**

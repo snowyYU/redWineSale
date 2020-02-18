@@ -23,7 +23,7 @@
 <script>
 import { mapState, mapActions } from 'vuex'
 import { getAddressInfo } from '@/api'
-import { getToken } from '@/utils'
+import { getToken, areaStringify } from '@/utils'
 import UserAddress from '@/components/common/UserAddress'
 import ProductInfo from '@/components/OrderStatus/ProductInfo'
 import PaymentStatus from '@/components/OrderStatus/PaymentStatus'
@@ -89,13 +89,6 @@ export default {
     handleCustomerService () {
       this.customerServiceBoxShow = true
     },
-    // 将区域数据结构
-    areaStringify (province, city, area) {
-      if (province === city) {
-        return `${province}/${area}`
-      }
-      return `${province}/${city}/${area}`
-    },
     // 查询用户收货地址
     getAddressInfo () {
       this.loading = true
@@ -105,7 +98,7 @@ export default {
           this.updateUserInfo({
             name: userName,
             phone,
-            area: this.areaStringify(province, city, area),
+            area: areaStringify(province, city, area),
             address
           })
         } else {
