@@ -125,7 +125,7 @@ export default {
     getTokenByCode (code, type) {
       getTokenByCode({ code, type }).then(res => {
         if (res.data.code === 200) {
-          const { token } = res.data.body.token
+          const { token } = res.data.body
           setToken(token)
 
           // 保存用户访问记录
