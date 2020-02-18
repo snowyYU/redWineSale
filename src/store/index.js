@@ -117,7 +117,7 @@ export default new Vuex.Store({
     updateClientEvn ({ commit }, clientEvn) {
       commit(SET_CLIENT_EVN, clientEvn)
     },
-    updateGlobalOverlayShow ({ commit }, globalOverlayData) {
+    updateGlobalOverlayData ({ commit }, globalOverlayData) {
       commit(SET_GLOBAL_OVERLAY_DATA, globalOverlayData)
     },
     saveVisitRecord ({ commit }, obj) {
@@ -125,7 +125,7 @@ export default new Vuex.Store({
         if (res.data.code === 200) {
           obj.cb && obj.cb(res)
         } else {
-          this.$toast('网络错误')
+          Vue.prototype.$toast('网络错误')
         }
       })
     }

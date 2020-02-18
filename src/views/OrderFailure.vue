@@ -81,10 +81,10 @@ export default {
     }
   },
   mounted () {
-    // this.getAddressInfo()
+    this.getAddressInfo()
   },
   methods: {
-    ...mapActions(['updateUserInfo']),
+    ...mapActions(['updateUserInfo', 'updateGlobalOverlayData']),
     // 联系客户按钮点击事件
     handleCustomerService () {
       this.customerServiceBoxShow = true
@@ -92,6 +92,7 @@ export default {
     // 查询用户收货地址
     getAddressInfo () {
       this.loading = true
+      this.updateGlobalOverlayData({ isShow: true, isTransparent: false })
       getAddressInfo({ token: getToken() }).then(res => {
         if (res.data.code === 200) {
           let { userName, phone, province, city, area, address } = res.data.body
@@ -102,12 +103,11 @@ export default {
             address
           })
         } else {
-          console.log(res)
+          this.$toast('网络错误')
         }
-      }).catch(err => {
-        console.log(err)
       }).finally(() => {
         this.loading = false
+        this.updateGlobalOverlayData({ isShow: false, isTransparent: false })
       })
     }
   }

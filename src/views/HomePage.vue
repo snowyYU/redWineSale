@@ -67,7 +67,11 @@ export default {
       if (this.clientEvn > 0) {
         this.getCode()
       } else {
-        setToken(buildToken())
+        const token = buildToken()
+        setToken(token)
+
+        // 保存用户访问记录接口
+        this.saveRecord(token)
       }
     } else {
       // url带参数（已获取code）
@@ -75,7 +79,11 @@ export default {
       if (this.clientEvn > 0 && this.$route.query.code) {
         this.getTokenByCode(this.$route.query.code, this.clientEvn)
       } else {
-        setToken(buildToken())
+        const token = buildToken()
+        setToken(token)
+
+        // 保存用户访问记录接口
+        this.saveRecord(token)
       }
     }
   },
@@ -120,19 +128,24 @@ export default {
           const { token } = res.data.body.token
           setToken(token)
 
-          // 保存用户访问记录接口
-          let data = {
-            visitType: '1',
-            type: this.clientEvn,
-            token,
-            channel: '测试',
-            subChannel: '测试'
-          }
-          this.saveVisitRecord({ data })
+          // 保存用户访问记录
+          this.saveRecord(token)
         } else {
           this.$toast('网络错误')
         }
       })
+    },
+
+    // 保存用户访问记录
+    saveRecord (token) {
+      let data = {
+        visitType: '1',
+        type: this.clientEvn,
+        token,
+        channel: '测试',
+        subChannel: '测试'
+      }
+      this.saveVisitRecord({ data })
     },
 
     // 显示用户信息表单事件

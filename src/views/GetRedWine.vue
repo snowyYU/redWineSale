@@ -118,10 +118,8 @@ export default {
             address
           })
         } else {
-          console.log(res)
+          this.$toast('网络错误')
         }
-      }).catch(err => {
-        console.log(err)
       }).finally(() => {
         this.loading = false
         this.updateGlobalOverlayData({ isShow: false, isTransparent: false })

@@ -1,19 +1,23 @@
 /**
  * axios拦截器
  */
-
+import Vue from 'vue'
 import axios from 'axios'
 // import querystring from 'querystring'
 
-const baseUrl = 'https://yizhihj.com'
+const baseUrl = process.env.VUE_APP_BASE_URL
+
+const instance = axios.create({
+  baseUrl
+})
+
 // Add a request interceptor
-axios.interceptors.request.use(function (config) {
+instance.interceptors.request.use(function (config) {
   // Do something before request is sent
 
   console.log('请求地址:', config.url)
   console.log('请求参数:', config.data)
 
-  config.url = baseUrl + config.url
   // config.transformRequest = [function (data) {
   //   return querystring.stringify(data)
   // }]
@@ -25,7 +29,7 @@ axios.interceptors.request.use(function (config) {
 })
 
 // Add a response interceptor
-axios.interceptors.response.use(function (response) {
+instance.interceptors.response.use(function (response) {
   // Any status code that lie within the range of 2xx cause this function to trigger
   // Do something with response data
 
@@ -35,7 +39,7 @@ axios.interceptors.response.use(function (response) {
 }, function (error) {
   // Any status codes that falls outside the range of 2xx cause this function to trigger
   // Do something with response error
-  this.$toast('网络错误')
+  Vue.prototype.$toast('网络错误')
   return Promise.reject(error)
 })
 
