@@ -60,6 +60,15 @@ export default {
       return
     }
 
+    // console.log('1323211131', this.$route.query)
+    // console.log('safsdlkfjlksadjlkfjdsj', getUrl())
+
+    // const mark = sessionStorage.getItem('mark')
+    // if (_.isEmpty(this.$route.query) && !mark) {
+    //   sessionStorage.setItem('mark', 1)
+    //   this.getCode()
+    // }
+
     if (_.isEmpty(this.$route.query)) {
       this.getCode()
     } else {
