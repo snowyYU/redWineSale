@@ -89,7 +89,7 @@ export default new Vuex.Store({
     clientEvn: -1,
     // 全局loading遮罩
     globalOverlayData: {
-      isShow: true,
+      isShow: false,
       isTransparent: true
     }
   },

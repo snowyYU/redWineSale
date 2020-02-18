@@ -56,18 +56,23 @@ export default {
      */
     window.onscroll = _.throttle(this.handleScrollEvent, 100)
 
-    // 判断是否登录
+    // 已登录跳过后面步骤
     if (!_.isEmpty(getToken())) {
       return
     }
 
-    // 判断url是否有查询参数
     if (_.isEmpty(this.$route.query)) {
-      // 如果不在H5环境下，就跳转授权
-      this.getCode()
-    } else {
-      // 如果不在H5环境下，就拿code获取token；如果在H5环境下，拿时间戳生成一个Token
+      // url不带参数（未获取code）
+      // 如果不在H5环境下，就跳转授权；如果在H5环境下，拿时间戳生成一个Token
       if (this.clientEvn > 0) {
+        this.getCode()
+      } else {
+        setToken(buildToken())
+      }
+    } else {
+      // url带参数（已获取code）
+      // 如果不在H5环境下，就拿code获取token；如果在H5环境下，拿时间戳生成一个Token
+      if (this.clientEvn > 0 && this.$route.query.code) {
         this.getTokenByCode(this.$route.query.code, this.clientEvn)
       } else {
         setToken(buildToken())
