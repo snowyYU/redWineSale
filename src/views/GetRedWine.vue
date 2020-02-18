@@ -143,26 +143,49 @@ export default {
       return orderType
     },
 
+    // 根据客户端环境和支付方式获取type
+    buildType () {
+      let type = ''
+      switch (this.clientEvn) {
+        case 0:
+          // 浏览器
+          if (this.payType === '1') {
+            type = '2'
+          } else {
+            type = '4'
+          }
+          break
+        case 1:
+          // 微信
+          type = '1'
+          break
+        case 2:
+          // 支付宝
+          type = '3'
+          break
+      }
+      // 1.微信 2.微信h5 3.支付宝 4.支付宝h5
+      return type
+    },
+
     // 支付
     orderPay () {
       this.loadingPay = true
       this.updateGlobalOverlayData({ isShow: true, isTransparent: true })
+      const type = this.buildType()
       let data = {
         orderType: this.getOrderType(this.productType),
-        type: this.payType,
+        type,
         token: getToken(),
         channel: '测试',
         subChannel: '测试'
       }
       orderPay(data).then(res => {
         if (res.data.code === 200) {
-          switch (this.clientEvn) {
-            case 0:
-              // 浏览器
-              break
-            case 1:
+          const { appId, timeStamp, nonceStr, paySign, mwebUrl } = res.data.body
+          switch (type) {
+            case '1':
               // 微信
-              const { appId, timeStamp, nonceStr, paySign } = res.data.body
               wxConfig(appId, timeStamp, nonceStr, paySign)
               wxReady(() => {
                 wxChooseWXPay(res.data.body).then(res => {
@@ -174,8 +197,16 @@ export default {
                 console.error(err)
               })
               break
-            case 2:
+            case '2':
+              // 微信h5
+              location.href = mwebUrl
+              break
+            case '3':
               // 支付宝
+              break
+            case '4':
+              // 支付宝h5
+              location.href = mwebUrl
               break
           }
         } else {

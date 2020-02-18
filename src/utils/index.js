@@ -268,3 +268,11 @@ export function wxChooseWXPay (obj) {
     })
   })
 }
+
+/**
+ * 支付宝jsSDK支付
+ * @param {*} obj
+ */
+export function aliTradePay (obj) {
+  return ap.tradePay({ obj })
+}
