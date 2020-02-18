@@ -5,10 +5,10 @@ import Vue from 'vue'
 import axios from 'axios'
 // import querystring from 'querystring'
 
-const baseUrl = process.env.VUE_APP_BASE_URL
+const baseURL = process.env.VUE_APP_BASE_URL
 
 const instance = axios.create({
-  baseUrl
+  baseURL
 })
 
 // Add a request interceptor
@@ -43,4 +43,4 @@ instance.interceptors.response.use(function (response) {
   return Promise.reject(error)
 })
 
-export default axios
+export default instance
