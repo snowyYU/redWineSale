@@ -98,7 +98,7 @@ export default {
       this.ProgressBoxShow = true
     },
     confirmQuit () {
-      this.$$router.replace({ name: 'home-page' })
+      this.$router.replace({ name: 'home-page' })
     },
     // 将区域数据结构
     areaStringify (province, city, area) {
