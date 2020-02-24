@@ -30,7 +30,7 @@ import PaymentStatus from '@/components/OrderStatus/PaymentStatus'
 import CustomerServiceBox from '@/components/OrderStatus/CustomerServiceBox'
 
 export default {
-  name: 'order-detail',
+  name: 'order-success',
   components: {
     UserAddress,
     ProductInfo,

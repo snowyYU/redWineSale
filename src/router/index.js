@@ -29,9 +29,9 @@ const routes = [
     meta: { title: '订单详情' }
   },
   {
-    path: '/orderFailure',
-    name: 'order-failure',
-    component: () => import(/* webpackChunkName: "orderFailure" */ '../views/OrderFailure.vue'),
+    path: '/orderLoading',
+    name: 'order-loading',
+    component: () => import(/* webpackChunkName: "orderLoading" */ '../views/OrderLoading.vue'),
     meta: { title: '订单详情' }
   }
   // ,
