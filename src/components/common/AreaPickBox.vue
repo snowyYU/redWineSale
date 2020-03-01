@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import areaData from '@/utils/area'
+import areaData from '@/utils/Area'
 
 export default {
   name: 'area-pick-box',
