@@ -43,3 +43,10 @@ export function saveAddress (data) {
 export function getAddressInfo (data) {
   return request.post('/server/restful/getAddressInfo', data)
 }
+/**
+ * 查看订单状态接口
+ * @param {*} orderno
+ */
+export function checkOrderStatus (orderno) {
+  return request.get(`/server/order/${orderno}`)
+}

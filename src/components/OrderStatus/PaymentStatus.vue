@@ -47,7 +47,7 @@ export default {
     handleButtonClick () {
       if (this.isPaid) {
         // 已支付
-        this.$router.push({ name: 'home-page' })
+        this.$router.replace({ name: 'home-page' })
       } else {
         // 刷新支付状态
       }

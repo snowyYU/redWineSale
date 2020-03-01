@@ -30,7 +30,7 @@ import FixedSubmitBar from '@/components/GetRedWine/FixedSubmitBar'
 import ProgressBox from '@/components/common/ProgressBox'
 import { mapState, mapActions } from 'vuex'
 import { getAddressInfo, orderPay } from '@/api'
-import { getToken, areaStringify, wxConfig, wxReady, wxError, wxChooseWXPay } from '@/utils'
+import { getToken, areaStringify, wxConfig, wxReady, wxError, wxChooseWXPay, setData } from '@/utils'
 
 export default {
   name: 'get-red-wine',
@@ -182,7 +182,8 @@ export default {
       }
       orderPay(data).then(res => {
         if (res.data.code === 200) {
-          const { appId, timeStamp, nonceStr, paySign, mwebUrl } = res.data.body
+          const { appId, timeStamp, nonceStr, paySign, mwebUrl, orderNo } = res.data.body
+          setData('orderNo', orderNo)
           switch (type) {
             case '1':
               // 微信

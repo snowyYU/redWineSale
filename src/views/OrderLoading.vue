@@ -10,7 +10,7 @@
     <user-address :isPaid="isPaid" />
 
     <!-- 商品信息 -->
-    <product-info :list="list" title="商品信息" />
+    <product-info :list="listsData" title="商品信息" />
 
     <!-- 底部提示信息 -->
     <div :class="['tips-text', { 'success': isPaid }]">{{tipsText}}</div>
@@ -22,8 +22,8 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import { getAddressInfo } from '@/api'
-import { getToken, areaStringify } from '@/utils'
+import { getAddressInfo, checkOrderStatus } from '@/api'
+import { getToken, areaStringify, getData } from '@/utils'
 import UserAddress from '@/components/common/UserAddress'
 import ProductInfo from '@/components/OrderStatus/ProductInfo'
 import PaymentStatus from '@/components/OrderStatus/PaymentStatus'
@@ -39,38 +39,13 @@ export default {
   },
   data () {
     return {
-      // 商品信息列表
-      list: [
-        {
-          id: 1,
-          label: '和平缔约128干红葡萄酒',
-          value: '¥ 0  (原价：¥<del>680</del>)'
-        },
-        {
-          id: 2,
-          label: '邮费',
-          value: '¥ 49  (24小时内发货)'
-        },
-        {
-          id: 3,
-          label: '支付方式',
-          value: '微信支付'
-        },
-        {
-          id: 4,
-          label: '下单时间',
-          value: '2020-01-16 15:35:23'
-        },
-        {
-          id: 5,
-          label: '订单状态',
-          value: '待支付'
-        }
-      ],
       // 支付状态
       isPaid: false,
       // 联系客服弹窗
-      customerServiceBoxShow: false
+      customerServiceBoxShow: false,
+      // 用于存放定时器
+      initInterval: null,
+      listsData: null
     }
   },
   computed: {
@@ -82,12 +57,74 @@ export default {
   },
   mounted () {
     this.getAddressInfo()
+    this.initInterval = this.checkOrderStatusF()
+    this.stopCheckOrderStatus(this.initInterval)
+  },
+  beforeDestroy () {
+    // 退出页面前清除下定时器
+    clearInterval(this.initInterval)
   },
   methods: {
     ...mapActions(['updateUserInfo', 'updateGlobalOverlayData']),
     // 联系客户按钮点击事件
     handleCustomerService () {
       this.customerServiceBoxShow = true
+    },
+    // 主要是
+    list (data) {
+      let showProducData = {}
+      switch (data.num) {
+        case 1:
+          showProducData.value1 = '¥ 0  (原价：¥<del>680</del>)'
+          showProducData.value2 = '¥ 49  (24小时内发货)'
+          showProducData.value3 = this.payMethodTranslate(data.payType)
+          showProducData.value4 = data.payDate
+          showProducData.value5 = this.payStatusTranslate(data.payState)
+          break
+        case 2:
+          showProducData.value1 = '¥ 69  (原价：¥<del>2776</del>)'
+          showProducData.value2 = '¥ 0  (24小时内发货)'
+          showProducData.value3 = this.payMethodTranslate(data.payType)
+          showProducData.value4 = data.payDate
+          showProducData.value5 = this.payStatusTranslate(data.payState)
+          break
+        case 6:
+          showProducData.value1 = '¥ 199  (原价：¥<del>8328</del>)'
+          showProducData.value2 = '¥ 0  (24小时内发货)'
+          showProducData.value3 = this.payMethodTranslate(data.payType)
+          showProducData.value4 = data.payDate
+          showProducData.value5 = this.payStatusTranslate(data.payState)
+          break
+        default:
+          break
+      }
+      this.listsData = [
+        {
+          id: 1,
+          label: '和平缔约128干红葡萄酒',
+          value: showProducData.value1
+        },
+        {
+          id: 2,
+          label: '邮费',
+          value: showProducData.value2
+        },
+        {
+          id: 3,
+          label: '支付方式',
+          value: showProducData.value3
+        },
+        {
+          id: 4,
+          label: '下单时间',
+          value: showProducData.value4
+        },
+        {
+          id: 5,
+          label: '订单状态',
+          value: showProducData.value5
+        }
+      ]
     },
     // 查询用户收货地址
     getAddressInfo () {
@@ -109,6 +146,81 @@ export default {
         this.loading = false
         this.updateGlobalOverlayData({ isShow: false, isTransparent: false })
       })
+    },
+    checkOrderStatusF () {
+      this.checkOrderStatus()
+      return setInterval(this.checkOrderStatus, 5000)
+    },
+    checkOrderStatus () {
+      let orderNo = getData('orderNo')
+      checkOrderStatus(orderNo).then(res => {
+        console.log(res.data)
+        if (res.status === 200 && res.data.data.payState === 'SUCCESS') {
+          clearInterval(this.initInterval)
+          this.list(res.data.data)
+          this.isPaid = true
+          // this.$router.push({ name: 'order-success' })
+        }
+      })
+    },
+    // 过滤下收到的数据（支付方式），方便显示
+    payMethodTranslate (data) {
+      let payType = ''
+      switch (data) {
+        case 'WeChat':
+          payType = '微信支付'
+          break
+        case 'Alipay':
+          payType = '支付宝支付'
+          break
+        default:
+          payType = ''
+          break
+      }
+      return payType
+    },
+    // 过滤下收到的数据（支付状态），方便显示
+    // NOTPAY("未支付"),
+    // CLOSED("已关闭"),
+    // SUCCESS("支付成功"),
+    // REFUND("转入退款"),
+    // USERPAYING("用户支付中"),
+    // PAYERROR("支付失败"),
+    // REVOKED("已撤销");
+    payStatusTranslate (data) {
+      let payStatus = ''
+      switch (data) {
+        case 'NOTPAY':
+          payStatus = '未支付'
+          break
+        case 'CLOSED':
+          payStatus = '已关闭'
+          break
+        case 'SUCCESS':
+          payStatus = '支付成功'
+          break
+        case 'REFUND':
+          payStatus = '转入退款'
+          break
+        case 'USERPAYING':
+          payStatus = '用户支付中'
+          break
+        case 'PAYERROR':
+          payStatus = '支付失败'
+          break
+        case 'REVOKED':
+          payStatus = '已撤销'
+          break
+        default:
+          payStatus = ''
+          break
+      }
+      return payStatus
+    },
+    stopCheckOrderStatus (target) {
+      setTimeout(() => {
+        clearInterval(target)
+      }, 60000)
     }
   }
 }
