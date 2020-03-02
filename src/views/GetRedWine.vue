@@ -183,6 +183,7 @@ export default {
       orderPay(data).then(res => {
         if (res.data.code === 200) {
           const { appId, timeStamp, nonceStr, paySign, mwebUrl, orderNo } = res.data.body
+          debugger
           setData('orderNo', orderNo)
           switch (type) {
             case '1':
@@ -191,7 +192,7 @@ export default {
               wxReady(() => {
                 wxChooseWXPay(res.data.body).then(res => {
                   console.log(res)
-                  this.$router.push({ name: 'order-success' })
+                  this.$router.push({ name: 'order-loading' })
                 })
               })
               wxError((err) => {
