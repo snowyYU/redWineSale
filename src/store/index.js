@@ -7,7 +7,8 @@ import {
   SET_LOCAL_DATA,
   SET_USER_INFO,
   SET_CLIENT_EVN,
-  SET_GLOBAL_OVERLAY_DATA
+  SET_GLOBAL_OVERLAY_DATA,
+  SET_ORDER_INFO
 } from '@/store/mutation-types'
 
 Vue.use(Vuex)
@@ -93,7 +94,8 @@ export default new Vuex.Store({
     globalOverlayData: {
       isShow: false,
       isTransparent: true
-    }
+    },
+    orderInfo: {}
   },
   mutations: {
     [SET_LOCAL_DATA] (state, localData) {
@@ -107,6 +109,9 @@ export default new Vuex.Store({
     },
     [SET_GLOBAL_OVERLAY_DATA] (state, globalOverlayData) {
       state.globalOverlayData = globalOverlayData
+    },
+    [SET_ORDER_INFO] (state, orderInfo) {
+      state.orderInfo = orderInfo
     }
   },
   actions: {
@@ -121,6 +126,9 @@ export default new Vuex.Store({
     },
     updateGlobalOverlayData ({ commit }, globalOverlayData) {
       commit(SET_GLOBAL_OVERLAY_DATA, globalOverlayData)
+    },
+    updateOrderInfo ({ commit }, orderInfo) {
+      commit(SET_ORDER_INFO, orderInfo)
     },
     saveVisitRecord ({ commit }, obj) {
       saveVisitRecord(obj.data).then(res => {

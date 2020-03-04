@@ -10,7 +10,7 @@
     <user-address :isPaid="isPaid" />
 
     <!-- 商品信息 -->
-    <product-info :list="list" title="商品信息" />
+    <product-info :list="productInfo" title="商品信息" />
 
     <!-- 底部提示信息 -->
     <div :class="['tips-text', { 'success': isPaid }]">{{tipsText}}</div>
@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import _ from 'lodash'
+import moment from 'moment'
 import { mapState, mapActions } from 'vuex'
 import { getAddressInfo } from '@/api'
 import { getToken, areaStringify } from '@/utils'
@@ -39,34 +41,6 @@ export default {
   },
   data () {
     return {
-      // 商品信息列表
-      list: [
-        {
-          id: 1,
-          label: '和平缔约128干红葡萄酒',
-          value: '¥ 0  (原价：¥<del>680</del>)'
-        },
-        {
-          id: 2,
-          label: '邮费',
-          value: '¥ 49  (24小时内发货)'
-        },
-        {
-          id: 3,
-          label: '支付方式',
-          value: '微信支付'
-        },
-        {
-          id: 4,
-          label: '下单时间',
-          value: '2020-01-16 15:35:23'
-        },
-        {
-          id: 5,
-          label: '订单状态',
-          value: '待支付'
-        }
-      ],
       // 支付状态
       isPaid: true,
       // 联系客服弹窗
@@ -74,10 +48,46 @@ export default {
     }
   },
   computed: {
-    ...mapState(['localData', 'userInfo']),
+    ...mapState(['localData', 'userInfo', 'orderInfo']),
+    productInfo () {
+      if (_.isEmpty(this.orderInfo) || _.isEmpty(this.localData)) {
+        return []
+      }
+
+      const productList = this.localData.productList[parseInt(this.orderInfo.productType) - 1]
+
+      const list = [
+        {
+          id: 1,
+          label: this.localData.name,
+          value: `¥ ${productList.price}  (原价：¥<del>${productList.original}</del>)`
+        },
+        {
+          id: 2,
+          label: '邮费',
+          value: `¥ ${productList.postage}  (24小时内发货)`
+        },
+        {
+          id: 3,
+          label: '支付方式',
+          value: this.orderInfo.payType === '1' ? '微信支付' : '支付宝支付'
+        },
+        {
+          id: 4,
+          label: '下单时间',
+          value: moment(this.orderInfo.payTime).format('YYYY-MM-DD HH:mm:ss')
+        },
+        {
+          id: 5,
+          label: '订单状态',
+          value: '物流配送中'
+        }
+      ]
+      return list
+    },
     // 提示文字
     tipsText () {
-      return this.isPaid ? '我们已为您申请加急配送，请耐心等待~' : '红酒付款后预计24小时内发货，请耐心等待'
+      return '我们已为您申请加急配送，请耐心等待~'
     }
   },
   mounted () {

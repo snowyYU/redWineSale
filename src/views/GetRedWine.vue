@@ -16,7 +16,7 @@
     <fixed-submit-bar ref="fixed-submit-bar" :productType="productType" :loading="loadingPay" @submit="onSubmit" />
 
     <!-- 当前进度弹窗 -->
-    <progress-box :show.sync="ProgressBoxShow" @confirm="orderPay" @cancel="confirmQuit"/>
+    <progress-box :show.sync="ProgressBoxShow" @confirm="onSubmit" @cancel="confirmQuit"/>
   </div>
 </template>
 
@@ -55,7 +55,9 @@ export default {
       // 支付类型 1.微信 2.支付宝
       payType: '2',
       // 提示弹窗显示状态
-      ProgressBoxShow: false
+      ProgressBoxShow: false,
+      // 支付时间
+      payTime: ''
     }
   },
   computed: {
@@ -91,7 +93,7 @@ export default {
     window.onresize = null
   },
   methods: {
-    ...mapActions(['updateUserInfo', 'saveVisitRecord', 'updateGlobalOverlayData']),
+    ...mapActions(['updateUserInfo', 'saveVisitRecord', 'updateGlobalOverlayData', 'updateOrderInfo']),
     useSafePadding () {
       let fixedSubmitBar = this.$refs['fixed-submit-bar'].$el
       let space = fixedSubmitBar.offsetTop - fixedSubmitBar.parentElement.offsetHeight - fixedSubmitBar.querySelector('.tips-text').offsetHeight
@@ -173,7 +175,7 @@ export default {
       this.loadingPay = true
       this.updateGlobalOverlayData({ isShow: true, isTransparent: true })
       const type = this.buildType()
-      let data = {
+      const data = {
         orderType: this.getOrderType(this.productType),
         type,
         token: getToken(),
@@ -183,8 +185,16 @@ export default {
       orderPay(data).then(res => {
         if (res.data.code === 200) {
           const { appId, timeStamp, nonceStr, paySign, mwebUrl, orderNo } = res.data.body
-          debugger
+          // debugger
           setData('orderNo', orderNo)
+          const orderInfo = {
+            orderNo, // 订单号
+            productType: this.productType, // 商品类型
+            payType: this.payType, // 支付类型
+            payTime: this.payTime // 支付时间
+          }
+          setData('orderInfo', orderInfo)
+          this.updateOrderInfo(orderInfo)
           switch (type) {
             case '1':
               // 微信
@@ -225,6 +235,8 @@ export default {
       if (this.loadingPay) {
         return
       }
+
+      this.payTime = Date.now()
 
       this.loadingPay = true
       this.updateGlobalOverlayData({ isShow: true, isTransparent: true })

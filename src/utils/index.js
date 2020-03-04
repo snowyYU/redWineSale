@@ -133,7 +133,7 @@ export function setToken (token) {
  * 生成Token
  */
 export function buildToken () {
-  return CryptoJS.MD5(Date.now()).toString()
+  return CryptoJS.MD5(Date.now() * 100 + (Math.floor(Math.random() * 90) + 10)).toString()
 }
 
 // 将区域数据结构化
