@@ -21,6 +21,7 @@ export default {
   created () {
     // 存储浏览器环境
     this.updateClientEvn(getClientEvn())
+    // _ai_analysis()
   }
 }
 </script>

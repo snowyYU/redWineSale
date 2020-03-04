@@ -231,7 +231,7 @@ export function wxConfig (appId, timestamp, nonceStr, signature) {
     timestamp,
     nonceStr,
     signature,
-    jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表
+    jsApiList: ['chooseWXPay', 'getLocation'] // 必填，需要使用的JS接口列表
   })
 }
 
@@ -275,4 +275,21 @@ export function wxChooseWXPay (obj) {
  */
 export function aliTradePay (obj) {
   return ap.tradePay({ obj })
+}
+
+/**
+ * 微信获取地址
+ * @param {*} cb
+ */
+export function wxGetLocation (cb) {
+  wx.getLocation({
+    type: 'wgs84',
+    success: function (res) {
+      cb && cb(res)
+      // var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+      // var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+      // var speed = res.speed; // 速度，以米/每秒计
+      // var accuracy = res.accuracy; // 位置精度
+    }
+  })
 }

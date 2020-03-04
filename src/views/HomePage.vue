@@ -9,8 +9,12 @@
           <span class="tips">每人限领1瓶</span>
         </van-button>
       </div>
-      <!-- <van-image class="product-image__inner" :src="require('../assets/img/product/long_2.jpg')" /> -->
-      <van-image v-for="item in 13" :key="item" class="product-image__inner" :src="require('../assets/img/product/long_' + (item + 1) + '.jpg')" lazy-load />
+      <van-image class="product-image__inner" :src="require('../assets/img/product/long_2.jpg')" />
+      <div class="product-image__item">
+        <van-image class="product-image__inner" :src="require('../assets/img/product/long_3.jpg')" />
+        <van-button class="product-image__button2" @click="handleShowUserInfoBox" />
+      </div>
+      <van-image v-for="item in 11" :key="item" class="product-image__inner" :src="require('../assets/img/product/long_' + (item + 3) + '.jpg')" lazy-load />
     </div>
 
     <!-- 底部悬浮按钮 -->
@@ -25,7 +29,7 @@
 
 <script>
 import _ from 'lodash'
-import { alipayAuth, wechatAuth, getUrl, setToken, getToken, buildToken } from '@/utils'
+import { alipayAuth, wechatAuth, getUrl, setToken, getToken, buildToken, wxConfig, wxReady, wxError, wxGetLocation } from '@/utils'
 import { getTokenByCode } from '@/api'
 import { mapState, mapActions } from 'vuex'
 import UserInfoBox from '@/components/HomePage/UserInfoBox'
@@ -148,9 +152,50 @@ export default {
       this.saveVisitRecord({ data })
     },
 
+    // longitude: 经度 latitude: 纬度
+    bmapGetLocation (longitude, latitude) {
+      const point = new BMap.Point(longitude, latitude)
+      const convertor = new BMap.Convertor()
+      const geocoder = new BMap.Geocoder()
+      convertor.translate([point], 1, 5, (res) => {
+        // console.log('translate', res)
+        if (res.status === 0) {
+          geocoder.getLocation(res.points[0], result => {
+            console.log('getLocation', result)
+            if (result) {
+
+            }
+          })
+        }
+      })
+    },
+
     // 显示用户信息表单事件
     handleShowUserInfoBox () {
-      this.userInfoBoxShow = true
+      // if (this.clientEvn === 1) {
+      //   wxConfig(appId, timeStamp, nonceStr, paySign)
+      //   wxReady(() => {
+      //     wxGetLocation((res) => {
+      //       console.log(res)
+      //       const { longitude, latitude } = res
+      //       this.getLocation({ longitude, latitude })
+      //     })
+      //   })
+      //   wxError((err) => {
+      //     console.error(err)
+      //   })
+      // }
+      if (this.clientEvn !== 1) {
+        if ('geolocation' in navigator) {
+          navigator.geolocation.getCurrentPosition(res => {
+            const { latitude, longitude } = res.coords
+            this.bmapGetLocation(longitude, latitude)
+          }, (err) => {
+            console.error('geolocation', err)
+          })
+        }
+      }
+      // this.userInfoBoxShow = true
     }
   }
 }
@@ -210,6 +255,27 @@ export default {
             color: #a21a1a;
             line-height: 1;
           }
+        }
+      }
+
+      .product-image__button2 {
+        display: block;
+        position: absolute;
+        right: 31px;
+        bottom: 16px;
+        z-index: 10;
+        width: 202px;
+        height: 163px;
+        border: 0;
+        background-image: url('../assets/img/get-free.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100% 100%;
+        background-color: transparent;
+        overflow: hidden;
+
+        &.van-button:active::before {
+          opacity: 0;
         }
       }
     }
@@ -279,6 +345,13 @@ export default {
               font-size: 22px;
             }
           }
+        }
+
+        .product-image__button2 {
+          right: 31px;
+          bottom: 16px;
+          width: 202px;
+          height: 163px;
         }
       }
     }

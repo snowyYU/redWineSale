@@ -16,7 +16,11 @@ instance.interceptors.request.use(function (config) {
   // Do something before request is sent
 
   console.log('请求地址:', config.url)
-  console.log('请求参数:', config.data)
+  if (config.params) {
+    console.log('请求参数:', config.params)
+  } else {
+    console.log('请求参数:', config.data)
+  }
 
   // config.transformRequest = [function (data) {
   //   return querystring.stringify(data)

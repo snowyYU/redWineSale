@@ -44,7 +44,7 @@ import ProgressBar from '@/components/HomePage/ProgressBar'
 import SubmitBar from '@/components/HomePage/SubmitBar'
 
 export default {
-  name: 'test',
+  name: 'user-info-box',
   components: {
     userInfoForm,
     ProgressBar,
