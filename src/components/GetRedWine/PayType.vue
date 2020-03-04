@@ -56,6 +56,8 @@ export default {
     switch (this.clientEvn) {
       case 0:
         // 浏览器
+        this.$set(this.list, 0, Object.assign({}, this.list[0], { show: false }))
+        this.payTypeRadio = '1'
         break
       case 1:
         // 微信

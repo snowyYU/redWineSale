@@ -88,6 +88,10 @@ export default {
       if (val) {
         // 在2秒内从0增长到指定值
         new TimelineLite().to(this.$data, 2, { percentage: this.localData.sales })
+
+        this.$nextTick(() => {
+          this.$refs['user-info-form'].initForm()
+        })
       }
     }
   },

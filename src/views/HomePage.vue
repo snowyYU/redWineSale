@@ -185,17 +185,17 @@ export default {
       //     console.error(err)
       //   })
       // }
-      if (this.clientEvn !== 1) {
-        if ('geolocation' in navigator) {
-          navigator.geolocation.getCurrentPosition(res => {
-            const { latitude, longitude } = res.coords
-            this.bmapGetLocation(longitude, latitude)
-          }, (err) => {
-            console.error('geolocation', err)
-          })
-        }
-      }
-      // this.userInfoBoxShow = true
+      // if (this.clientEvn !== 1) {
+      //   if ('geolocation' in navigator) {
+      //     navigator.geolocation.getCurrentPosition(res => {
+      //       const { latitude, longitude } = res.coords
+      //       this.bmapGetLocation(longitude, latitude)
+      //     }, (err) => {
+      //       console.error('geolocation', err)
+      //     })
+      //   }
+      // }
+      this.userInfoBoxShow = true
     }
   }
 }
