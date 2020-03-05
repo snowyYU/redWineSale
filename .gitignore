@@ -2,6 +2,7 @@
 node_modules
 /dist
 /dist.zip
+/shop
 /shop.zip
 
 # local env files
