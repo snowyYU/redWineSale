@@ -135,9 +135,9 @@ export default new Vuex.Store({
         if (res.data.code === 200) {
           obj.cb && obj.cb(res)
         } else {
-          Vue.prototype.$toast('网络错误')
+          console.error('网络错误')
         }
-      })
+      }).catch(() => console.error('网络错误'))
     }
   },
   modules: {

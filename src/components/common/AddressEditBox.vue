@@ -102,6 +102,9 @@ export default {
         } else {
           this.$toast('网络错误')
         }
+      }).catch(err => {
+        console.error(err)
+        this.$toast('网络错误')
       }).finally(() => {
         this.loading = false
         this.updateGlobalOverlayData({ isShow: false, isTransparent: true })

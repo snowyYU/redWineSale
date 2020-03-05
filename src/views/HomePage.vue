@@ -135,9 +135,9 @@ export default {
           // 保存用户访问记录
           this.saveRecord(token)
         } else {
-          this.$toast('网络错误')
+          console.error('网络错误')
         }
-      })
+      }).catch(() => console.error('网络错误'))
     },
 
     // 保存用户访问记录

@@ -122,6 +122,9 @@ export default {
         } else {
           this.$toast('网络错误')
         }
+      }).catch(err => {
+        console.error(err)
+        this.$toast('网络错误')
       }).finally(() => {
         this.loading = false
         this.updateGlobalOverlayData({ isShow: false, isTransparent: false })
@@ -185,8 +188,7 @@ export default {
       orderPay(data).then(res => {
         if (res.data.code === 200) {
           const { appId, timeStamp, nonceStr, paySign, mwebUrl, orderNo } = res.data.body
-          // debugger
-          setData('orderNo', orderNo)
+
           const orderInfo = {
             orderNo, // 订单号
             productType: this.productType, // 商品类型
@@ -224,6 +226,9 @@ export default {
         } else {
           this.$toast('网络错误')
         }
+      }).catch(err => {
+        console.error(err)
+        this.$toast('网络错误')
       }).finally(() => {
         this.loadingPay = false
         this.updateGlobalOverlayData({ isShow: false, isTransparent: true })
@@ -252,6 +257,17 @@ export default {
         cb: () => {
           this.orderPay()
         } })
+
+      // this.payTime = Date.now()
+      // const orderInfo = {
+      //   orderNo: 'yz2020022957171357', // 订单号
+      //   productType: this.productType, // 商品类型
+      //   payType: this.payType, // 支付类型
+      //   payTime: this.payTime // 支付时间
+      // }
+      // setData('orderInfo', orderInfo)
+      // this.updateOrderInfo(orderInfo)
+      // this.$router.push({ name: 'order-loading' })
     }
   }
 }

@@ -50,6 +50,7 @@ export default {
         this.$router.replace({ name: 'home-page' })
       } else {
         // 刷新支付状态
+        this.$emit('click')
       }
     }
   }

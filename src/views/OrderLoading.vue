@@ -1,7 +1,7 @@
 <template>
   <div class="order-detail">
     <!-- 支付状态 -->
-    <payment-status :isPaid="isPaid" />
+    <payment-status :isPaid="isPaid" @click="handleReloadClick" />
 
     <!-- 联系客服按钮 -->
     <div class="customer-service" @click="handleCustomerService"></div>
@@ -47,6 +47,8 @@ export default {
       customerServiceBoxShow: false,
       // 定时器id
       intervalId: '',
+      // 延时器id
+      timeoutId: '',
       // 订单信息
       orderData: {}
     }
@@ -92,7 +94,7 @@ export default {
   },
   created () {
     const orderInfo = getData('orderInfo')
-    if (_.isEmpty(orderInfo)) {
+    if (!_.isEmpty(orderInfo)) {
       this.updateOrderInfo(orderInfo)
     }
   },
@@ -101,7 +103,7 @@ export default {
     this.checkOrderStatus()
 
     this.intervalId = this.setCheckOrderInterval()
-    this.setCheckOrderTimeout(this.intervalId)
+    this.timeoutId = this.setCheckOrderTimeout(this.intervalId)
   },
   beforeDestroy () {
     // 退出页面前清除下定时器
@@ -115,7 +117,6 @@ export default {
     },
     // 查询用户收货地址
     getAddressInfo () {
-      this.loading = true
       this.updateGlobalOverlayData({ isShow: true, isTransparent: false })
       getAddressInfo({ token: getToken() }).then(res => {
         if (res.data.code === 200) {
@@ -129,8 +130,10 @@ export default {
         } else {
           this.$toast('网络错误')
         }
+      }).catch(err => {
+        console.error(err)
+        this.$toast('网络错误')
       }).finally(() => {
-        this.loading = false
         this.updateGlobalOverlayData({ isShow: false, isTransparent: false })
       })
     },
@@ -147,7 +150,7 @@ export default {
       }
     },
     // 查询订单状态
-    checkOrderStatus () {
+    checkOrderStatus (mode) {
       const orderNo = this.orderInfo.orderNo
       checkOrderStatus(orderNo).then(res => {
         console.log(res.data)
@@ -164,6 +167,16 @@ export default {
 
           this.isPaid = true
           // this.$router.push({ name: 'order-success' })
+        }
+      }).catch(err => {
+        if (mode) {
+          this.$toast('网络错误')
+        }
+        console.error(err)
+        this.clearCheckOrderInterval()
+      }).finally(() => {
+        if (mode) {
+          this.updateGlobalOverlayData({ isShow: false, isTransparent: false })
         }
       })
     },
@@ -201,9 +214,27 @@ export default {
     },
     // 设置轮询超时时间
     setCheckOrderTimeout (id, delay = 60000) {
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         this.clearCheckOrderInterval(id)
       }, delay)
+      return timeoutId
+    },
+    // 停止延时器
+    clearCheckOrderTimeout (id) {
+      const timeoutId = id || this.timeoutId
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+    },
+    // 刷新订单状态
+    handleReloadClick () {
+      this.updateGlobalOverlayData({ isShow: true, isTransparent: false })
+
+      this.clearCheckOrderInterval()
+      this.clearCheckOrderTimeout()
+      this.checkOrderStatus(1)
+      this.intervalId = this.setCheckOrderInterval()
+      this.timeoutId = this.setCheckOrderTimeout(this.intervalId)
     }
   }
 }
