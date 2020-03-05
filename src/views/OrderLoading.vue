@@ -151,7 +151,7 @@ export default {
     },
     // 查询订单状态
     checkOrderStatus (mode) {
-      const orderNo = this.orderInfo.orderNo
+      const orderNo = getData('orderNo')
       checkOrderStatus(orderNo).then(res => {
         console.log(res.data)
         if (res.status === 200 && res.data.data.payState === 'SUCCESS') {

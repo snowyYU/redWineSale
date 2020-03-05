@@ -189,6 +189,7 @@ export default {
         if (res.data.code === 200) {
           const { appId, timeStamp, nonceStr, paySign, mwebUrl, orderNo } = res.data.body
 
+          setData('orderNo', orderNo)
           const orderInfo = {
             orderNo, // 订单号
             productType: this.productType, // 商品类型
