@@ -166,6 +166,10 @@ export default {
 
           this.isPaid = true
           // this.$router.push({ name: 'order-success' })
+        } else {
+          if (mode) {
+            this.$toast('支付未完成，请稍后')
+          }
         }
       }).catch(err => {
         if (mode) {

@@ -1,7 +1,6 @@
 /**
  * axios拦截器
  */
-import Vue from 'vue'
 import axios from 'axios'
 // import querystring from 'querystring'
 

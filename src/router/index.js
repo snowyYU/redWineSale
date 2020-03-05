@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomePage from '../views/HomePage.vue'
-// import { getUserInfo } from '@/utils'
+import { getToken } from '@/utils'
 
 Vue.use(VueRouter)
 
@@ -20,19 +20,19 @@ const routes = [
     path: '/getRedWine',
     name: 'get-red-wine',
     component: () => import(/* webpackChunkName: "GetRedWine" */ '../views/GetRedWine.vue'),
-    meta: { title: '领取进口红酒' }
+    meta: { title: '领取进口红酒', requiresAuth: true }
   },
   {
     path: '/orderSuccess',
     name: 'order-success',
     component: () => import(/* webpackChunkName: "orderSuccess" */ '../views/OrderSuccess.vue'),
-    meta: { title: '订单详情' }
+    meta: { title: '订单详情', requiresAuth: true }
   },
   {
     path: '/orderLoading',
     name: 'order-loading',
     component: () => import(/* webpackChunkName: "orderLoading" */ '../views/OrderLoading.vue'),
-    meta: { title: '订单详情' }
+    meta: { title: '订单详情', requiresAuth: true }
   }
   // ,
   // {
@@ -51,24 +51,24 @@ router.beforeEach((to, from, next) => {
   console.log('to:', to)
   console.log('from:', from)
 
-  // if (to.matched.some(record => record.meta.requiresAuth)) {
-  //   // this route requires auth, check if logged in
-  //   // if not, redirect to login page.
-  //   if (!auth.loggedIn()) {
-  //     next({
-  //       path: '/login',
-  //       query: { redirect: to.fullPath }
-  //     })
-  //   } else {
-  //     next()
-  //   }
-  // } else {
-  //   next() // 确保一定要调用 next()
-  // }
-
   // 修改网站标题
   if (document.title !== to.meta.title) {
     document.title = to.meta.title || ''
+  }
+
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (!getToken()) {
+      Vue.prototype.$toast('请先填写个人信息')
+      next({
+        path: '/'
+      })
+    } else {
+      next()
+    }
+  } else {
+    next() // 确保一定要调用 next()
   }
 
   // 判断是否填写个人信息

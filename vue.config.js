@@ -1,6 +1,6 @@
 module.exports = {
   publicPath: '/',
-  // outputDir: '',
+  outputDir: 'shop',
   lintOnSave: true,
   // devServer: {
   //   proxy: {

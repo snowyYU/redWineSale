@@ -17,6 +17,7 @@ module.exports = {
   globals: {
     wx: 'readonly',
     ap: 'readonly',
-    BMap: 'readonly'
+    BMap: 'readonly',
+    _ai_analysis: 'readonly'
   }
 }
