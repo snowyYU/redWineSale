@@ -22,7 +22,6 @@
 
 <script>
 import _ from 'lodash'
-import moment from 'moment'
 import { mapState, mapActions } from 'vuex'
 import { getAddressInfo, checkOrderStatus } from '@/api'
 import { getToken, areaStringify, setData, getData } from '@/utils'
@@ -77,7 +76,7 @@ export default {
         {
           id: 4,
           label: '下单时间',
-          value: moment(this.orderInfo.payTime).format('YYYY-MM-DD HH:mm:ss')
+          value: this.orderInfo.payTime
         },
         {
           id: 5,

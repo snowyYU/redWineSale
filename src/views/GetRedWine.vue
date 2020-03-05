@@ -22,6 +22,7 @@
 
 <script>
 import _ from 'lodash'
+import moment from 'moment'
 import ProductList from '@/components/GetRedWine/ProductList'
 import UserAddress from '@/components/common/UserAddress'
 import ProductInfo from '@/components/GetRedWine/ProductInfo'
@@ -242,7 +243,7 @@ export default {
         return
       }
 
-      this.payTime = Date.now()
+      this.payTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
 
       this.loadingPay = true
       this.updateGlobalOverlayData({ isShow: true, isTransparent: true })
