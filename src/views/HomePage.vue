@@ -195,6 +195,7 @@ export default {
       //     })
       //   }
       // }
+      _ai_analysis()
       this.userInfoBoxShow = true
     }
   }

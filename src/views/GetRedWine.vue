@@ -179,8 +179,8 @@ export default {
         orderType: this.getOrderType(this.productType),
         type,
         token: getToken(),
-        channel: '测试',
-        subChannel: '测试'
+        channel: 'doumeng',
+        subChannel: 'doumenghj1'
       }
       orderPay(data).then(res => {
         if (res.data.code === 200) {

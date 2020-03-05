@@ -14,7 +14,7 @@ const instance = axios.create({
 // Add a request interceptor
 instance.interceptors.request.use(function (config) {
   // Do something before request is sent
-
+  _ai_analysis()
   console.log('请求地址:', config.url)
   if (config.params) {
     console.log('请求参数:', config.params)
