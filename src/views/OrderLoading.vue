@@ -10,7 +10,7 @@
     <user-address :isPaid="isPaid" />
 
     <!-- 商品信息 -->
-    <product-info :list="productInfo" title="商品信息" />
+    <product-info :isPaid="isPaid" :list="productInfo" title="商品信息" />
 
     <!-- 底部提示信息 -->
     <div :class="['tips-text', { 'success': isPaid }]">{{tipsText}}</div>
@@ -60,26 +60,31 @@ export default {
       const list = [
         {
           id: 1,
+          label: '订单号',
+          value: this.orderInfo.orderNo
+        },
+        {
+          id: 2,
           label: this.localData.name,
           value: `¥ ${productList.price}  (原价：¥<del>${productList.original}</del>)`
         },
         {
-          id: 2,
+          id: 3,
           label: '邮费',
           value: `¥ ${productList.postage}  (24小时内发货)`
         },
         {
-          id: 3,
+          id: 4,
           label: '支付方式',
           value: this.orderInfo.payType === '1' ? '微信支付' : '支付宝支付'
         },
         {
-          id: 4,
+          id: 5,
           label: '下单时间',
           value: this.orderInfo.payTime
         },
         {
-          id: 5,
+          id: 6,
           label: '订单状态',
           value: this.isPaid ? '物流配送中' : '待支付'
         }

@@ -7,14 +7,14 @@
       </template>
     </van-cell>
 
-    <template v-for="item in list">
+    <template v-for="item in productList">
       <van-cell :key="item.id" center :border="border">
         <template #title>
           <div v-html="item.label"></div>
         </template>
 
         <template>
-          <div v-html="item.value"></div>
+          <div v-html="item.value" @click="handleItemClick(item)"></div>
         </template>
       </van-cell>
     </template>
@@ -39,6 +39,27 @@ export default {
     border: {
       type: Boolean,
       default: false
+    },
+    isPaid: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed: {
+    productList () {
+      if (!this.isPaid) {
+        return this.list.filter(item => item.label !== '订单号')
+      }
+      return this.list
+    }
+  },
+  methods: {
+    handleItemClick (item) {
+      if (item.label === '订单号') {
+        this.$copyText(item.value).then(() => {
+          this.$toast('已复制到剪贴板')
+        })
+      }
     }
   }
 }
@@ -72,7 +93,7 @@ export default {
     line-height: normal;
 
     .van-cell__title {
-      flex: none;
+      flex:  1 0 auto;
 
       div {
         font-size: 21.01px;
@@ -81,7 +102,7 @@ export default {
     }
 
     .van-cell__value {
-      flex: 1 0 auto;
+      flex: none;
 
       div {
         font-size: 21.01px;

@@ -104,7 +104,7 @@ export default {
       this.ProgressBoxShow = true
     },
     confirmQuit () {
-      this.$router.replace({ name: 'home-page' })
+      // this.$router.replace({ name: 'home-page' })
     },
 
     // 查询用户收货地址
@@ -260,7 +260,7 @@ export default {
           this.orderPay()
         } })
 
-      // this.payTime = Date.now()
+      // this.payTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
       // const orderInfo = {
       //   orderNo: 'yz2020022957171357', // 订单号
       //   productType: this.productType, // 商品类型
