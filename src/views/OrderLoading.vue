@@ -60,28 +60,28 @@ export default {
       const list = [
         {
           id: 1,
-          label: '订单号',
-          value: this.orderInfo.orderNo
-        },
-        {
-          id: 2,
           label: this.localData.name,
           value: `¥ ${productList.price}  (原价：¥<del>${productList.original}</del>)`
         },
         {
-          id: 3,
+          id: 2,
           label: '邮费',
           value: `¥ ${productList.postage}  (24小时内发货)`
         },
         {
-          id: 4,
+          id: 3,
           label: '支付方式',
           value: this.orderInfo.payType === '1' ? '微信支付' : '支付宝支付'
         },
         {
-          id: 5,
+          id: 4,
           label: '下单时间',
           value: this.orderInfo.payTime
+        },
+        {
+          id: 5,
+          label: '订单号',
+          value: this.orderInfo.orderNo
         },
         {
           id: 6,
