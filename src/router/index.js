@@ -6,10 +6,6 @@ import { getToken } from '@/utils'
 Vue.use(VueRouter)
 
 const routes = [
-  // {
-  //   path: '/',
-  //   redirect: '/home'
-  // },
   {
     path: '/',
     name: 'home-page',
@@ -33,12 +29,11 @@ const routes = [
     name: 'order-loading',
     component: () => import(/* webpackChunkName: "orderLoading" */ '../views/OrderLoading.vue'),
     meta: { title: '订单详情', requiresAuth: true }
+  },
+  {
+    path: '*',
+    redirect: '/'
   }
-  // ,
-  // {
-  //   path: '*',
-  //   redirect: '/home'
-  // }
 ]
 
 const router = new VueRouter({
@@ -48,8 +43,8 @@ const router = new VueRouter({
 
 // 全局前置路由
 router.beforeEach((to, from, next) => {
-  console.log('to:', to)
-  console.log('from:', from)
+  // console.log('to:', to)
+  // console.log('from:', from)
 
   // 修改网站标题
   if (document.title !== to.meta.title) {
@@ -70,18 +65,6 @@ router.beforeEach((to, from, next) => {
   } else {
     next() // 确保一定要调用 next()
   }
-
-  // 判断是否填写个人信息
-  // if (to.name !== 'home-page') {
-  //   if (getUserInfo()) {
-  //     next()
-  //   } else {
-  //     next({ name: 'home-page' })
-  //   }
-  // } else {
-  //   next()
-  // }
-  // next()
 })
 
 export default router

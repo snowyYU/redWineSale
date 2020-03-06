@@ -161,7 +161,7 @@ export default {
         // console.log('translate', res)
         if (res.status === 0) {
           geocoder.getLocation(res.points[0], result => {
-            console.log('getLocation', result)
+            // console.log('getLocation', result)
             if (result) {
 
             }

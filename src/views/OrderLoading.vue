@@ -157,7 +157,7 @@ export default {
     checkOrderStatus (mode) {
       const orderNo = getData('orderNo')
       checkOrderStatus(orderNo).then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         if (res.status === 200 && res.data.data.payState === 'SUCCESS') {
           this.clearCheckOrderInterval()
 

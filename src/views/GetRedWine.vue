@@ -205,7 +205,7 @@ export default {
               wxConfig(appId, timeStamp, nonceStr, paySign)
               wxReady(() => {
                 wxChooseWXPay(res.data.body).then(res => {
-                  console.log(res)
+                  // console.log(res)
                   this.$router.push({ name: 'order-loading' })
                 })
               })
