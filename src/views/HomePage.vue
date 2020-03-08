@@ -29,7 +29,7 @@
 
 <script>
 import _ from 'lodash'
-import { alipayAuth, wechatAuth, getUrl, setToken, getToken, buildToken, wxConfig, wxReady, wxError, wxGetLocation } from '@/utils'
+import { alipayAuth, wechatAuth, getUrl, setToken, getToken, buildToken } from '@/utils'
 import { getTokenByCode } from '@/api'
 import { mapState, mapActions } from 'vuex'
 import UserInfoBox from '@/components/HomePage/UserInfoBox'

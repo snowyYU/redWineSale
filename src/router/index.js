@@ -19,12 +19,6 @@ const routes = [
     meta: { title: '领取进口红酒', requiresAuth: true }
   },
   {
-    path: '/orderSuccess',
-    name: 'order-success',
-    component: () => import(/* webpackChunkName: "orderSuccess" */ '../views/OrderSuccess.vue'),
-    meta: { title: '订单详情', requiresAuth: true }
-  },
-  {
     path: '/orderLoading',
     name: 'order-loading',
     component: () => import(/* webpackChunkName: "orderLoading" */ '../views/OrderLoading.vue'),

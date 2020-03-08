@@ -169,19 +169,6 @@ export function areaParse (area) {
 export function wechatAuth (appId, redirectUri, responseType, scope, state) {
   let url = 'https://open.weixin.qq.com/connect/oauth2/authorize'
   let queryString = 'appid=' + appId + '&redirect_uri=' + encodeURIComponent(redirectUri) + '&response_type=' + responseType + '&scope=' + scope + '&state=' + state
-
-  // let params = {
-  //   appid: appId,
-  //   redirect_uri: encodeURIComponent(redirectUri),
-  //   response_type: responseType,
-  //   scope,
-  //   state
-  // }
-
-  // let queryString = Object.keys(params).map(key => {
-  //   return key + '=' + params[key]
-  // }).join('&')
-
   location.href = url + '?' + queryString + '#wechat_redirect'
 }
 
@@ -195,18 +182,6 @@ export function wechatAuth (appId, redirectUri, responseType, scope, state) {
 export function alipayAuth (appId, scope, redirectUri, state) {
   let url = 'https://openauth.alipaydev.com/oauth2/publicAppAuthorize.htm'
   let queryString = 'app_id=' + appId + '&scope=' + scope + '&redirect_uri=' + encodeURIComponent(redirectUri) + '&state=' + state
-
-  // let params = {
-  //   app_id: appId,
-  //   scope,
-  //   redirect_uri: encodeURIComponent(redirectUri),
-  //   state
-  // }
-
-  // let queryString = Object.keys(params).map(key => {
-  //   return key + '=' + params[key]
-  // }).join('&')
-
   location.href = url + '?' + queryString
 }
 
@@ -231,7 +206,7 @@ export function wxConfig (appId, timestamp, nonceStr, signature) {
     timestamp,
     nonceStr,
     signature,
-    jsApiList: ['chooseWXPay', 'getLocation'] // 必填，需要使用的JS接口列表
+    jsApiList: ['chooseWXPay'] // 必填，需要使用的JS接口列表
   })
 }
 
@@ -275,21 +250,4 @@ export function wxChooseWXPay (obj) {
  */
 export function aliTradePay (obj) {
   return ap.tradePay({ obj })
-}
-
-/**
- * 微信获取地址
- * @param {*} cb
- */
-export function wxGetLocation (cb) {
-  wx.getLocation({
-    type: 'wgs84',
-    success: function (res) {
-      cb && cb(res)
-      // var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
-      // var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
-      // var speed = res.speed; // 速度，以米/每秒计
-      // var accuracy = res.accuracy; // 位置精度
-    }
-  })
 }

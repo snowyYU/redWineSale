@@ -17,8 +17,6 @@ export default new Vuex.Store({
   state: {
     // 本地数据
     localData: {
-      // 百度地图ak
-      ak: 'GL462DI97QdOB9XRUPiMNfMApebreS5e',
       // 微信appId
       wxAppId: 'wx1d4a1163544ae273',
       // 支付宝appId
