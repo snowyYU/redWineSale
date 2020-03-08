@@ -146,8 +146,8 @@ export default {
         visitType: '1',
         type: this.clientEvn,
         token,
-        channel: '测试',
-        subChannel: '测试'
+        channel: 'doumeng',
+        subChannel: 'doumenghj1'
       }
       this.saveVisitRecord({ data })
     },
