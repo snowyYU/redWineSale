@@ -152,49 +152,8 @@ export default {
       this.saveVisitRecord({ data })
     },
 
-    // longitude: 经度 latitude: 纬度
-    bmapGetLocation (longitude, latitude) {
-      const point = new BMap.Point(longitude, latitude)
-      const convertor = new BMap.Convertor()
-      const geocoder = new BMap.Geocoder()
-      convertor.translate([point], 1, 5, (res) => {
-        // console.log('translate', res)
-        if (res.status === 0) {
-          geocoder.getLocation(res.points[0], result => {
-            // console.log('getLocation', result)
-            if (result) {
-
-            }
-          })
-        }
-      })
-    },
-
     // 显示用户信息表单事件
     handleShowUserInfoBox () {
-      // if (this.clientEvn === 1) {
-      //   wxConfig(appId, timeStamp, nonceStr, paySign)
-      //   wxReady(() => {
-      //     wxGetLocation((res) => {
-      //       console.log(res)
-      //       const { longitude, latitude } = res
-      //       this.getLocation({ longitude, latitude })
-      //     })
-      //   })
-      //   wxError((err) => {
-      //     console.error(err)
-      //   })
-      // }
-      // if (this.clientEvn !== 1) {
-      //   if ('geolocation' in navigator) {
-      //     navigator.geolocation.getCurrentPosition(res => {
-      //       const { latitude, longitude } = res.coords
-      //       this.bmapGetLocation(longitude, latitude)
-      //     }, (err) => {
-      //       console.error('geolocation', err)
-      //     })
-      //   }
-      // }
       _ai_analysis()
       this.userInfoBoxShow = true
     }

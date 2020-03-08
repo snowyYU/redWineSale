@@ -37,9 +37,6 @@ const router = new VueRouter({
 
 // 全局前置路由
 router.beforeEach((to, from, next) => {
-  // console.log('to:', to)
-  // console.log('from:', from)
-
   // 修改网站标题
   if (document.title !== to.meta.title) {
     document.title = to.meta.title || ''

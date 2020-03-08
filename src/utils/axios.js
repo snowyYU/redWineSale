@@ -2,7 +2,6 @@
  * axios拦截器
  */
 import axios from 'axios'
-// import querystring from 'querystring'
 
 const baseURL = process.env.VUE_APP_BASE_URL
 
@@ -14,16 +13,6 @@ const instance = axios.create({
 instance.interceptors.request.use(function (config) {
   // Do something before request is sent
   _ai_analysis()
-  // console.log('请求地址:', config.url)
-  // if (config.params) {
-  //   console.log('请求参数:', config.params)
-  // } else {
-  //   console.log('请求参数:', config.data)
-  // }
-
-  // config.transformRequest = [function (data) {
-  //   return querystring.stringify(data)
-  // }]
 
   return config
 }, function (error) {
@@ -35,8 +24,6 @@ instance.interceptors.request.use(function (config) {
 instance.interceptors.response.use(function (response) {
   // Any status code that lie within the range of 2xx cause this function to trigger
   // Do something with response data
-
-  // console.log('返回参数:', response)
 
   return response
 }, function (error) {

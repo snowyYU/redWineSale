@@ -3,18 +3,16 @@ import App from './App.vue'
 import './registerServiceWorker'
 import router from './router'
 import store from './store'
-// import directives from './directives'
 import './assets/style.scss'
-// import vconsole from 'vconsole'
-import Vue2TouchEvents from 'vue2-touch-events'
+// Vant组件
 import { Button, Popup, Progress, Cell, CellGroup, Field, AddressEdit, Toast, Area, Loading, Image, SubmitBar, NumberKeyboard, RadioGroup, Radio, Icon, Lazyload, Overlay } from 'vant'
+// 复制到剪贴板
 import VueClipboard from 'vue-clipboard2'
+import vconsole from 'vconsole'
 
-// new vconsole()
+new vconsole()
 Vue.use(VueClipboard)
 Vue.use(Button).use(Popup).use(Progress).use(Cell).use(CellGroup).use(Field).use(AddressEdit).use(Toast).use(Area).use(Loading).use(Image).use(SubmitBar).use(NumberKeyboard).use(RadioGroup).use(Radio).use(Icon).use(Lazyload).use(Overlay)
-Vue.use(Vue2TouchEvents)
-// Vue.use(directives)
 Vue.config.productionTip = false
 
 new Vue({

@@ -259,17 +259,6 @@ export default {
         cb: () => {
           this.orderPay()
         } })
-
-      // this.payTime = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')
-      // const orderInfo = {
-      //   orderNo: 'yz2020022957171357', // 订单号
-      //   productType: this.productType, // 商品类型
-      //   payType: this.payType, // 支付类型
-      //   payTime: this.payTime // 支付时间
-      // }
-      // setData('orderInfo', orderInfo)
-      // this.updateOrderInfo(orderInfo)
-      // this.$router.push({ name: 'order-loading' })
     }
   }
 }
