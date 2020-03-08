@@ -32,8 +32,6 @@
               </div>
             </div>
             <div class="tips-text" v-show="productType === '2'">
-              <!-- <span class="label">进口跨国的运输费用需要您理解与分担</span>
-              <span class="value">运费￥49</span> -->
             </div>
           </div>
         </template>
@@ -52,8 +50,6 @@
               </div>
             </div>
             <div class="tips-text" v-show="productType === '3'">
-              <!-- <span class="label">进口跨国的运输费用需要您理解与分担</span>
-              <span class="value">运费￥49</span> -->
             </div>
           </div>
         </template>

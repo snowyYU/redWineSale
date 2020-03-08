@@ -10,33 +10,16 @@ import { v4 as uuidv4 } from 'uuid'
  * @param {String} key 键
  */
 export function getData (key) {
-  if (_.isEmpty(key)) {
-    console.error('参数不能为空')
-    return ''
-  }
-  let val = sessionStorage.getItem(key)
-  if (_.isEmpty(val)) {
-    return val
-  }
-  return JSON.parse(val)
+  return sessionStorage.getItem(key)
 }
 
 /**
- * 存储session数据(单独一个Number类型的0需要转为String类型存储)
+ * 存储session数据
  * @param {String} key 键
  * @param {*} val 值
  */
 export function setData (key, val) {
-  if (_.isEmpty(key)) {
-    console.error('key不能为空')
-    return false
-  }
-  if (_.isEmpty(val)) {
-    console.error('val不能为空')
-    return false
-  }
-  sessionStorage.setItem(key, JSON.stringify(val))
-  return true
+  sessionStorage.setItem(key, val)
 }
 
 /**
@@ -44,12 +27,7 @@ export function setData (key, val) {
  * @param {String} key 键
  */
 export function removeData (key) {
-  if (_.isEmpty(key)) {
-    console.error('key不能为空')
-    return false
-  }
   sessionStorage.removeItem(key)
-  return true
 }
 
 /**
@@ -57,7 +35,6 @@ export function removeData (key) {
  */
 export function clearData () {
   sessionStorage.clear()
-  return true
 }
 
 /**
@@ -79,7 +56,7 @@ export function getClientEvn () {
  * 获取用户信息
  */
 export function getUserInfo () {
-  return getData('userInfo')
+  return JSON.parse(getData('userInfo'))
 }
 
 /**
@@ -87,8 +64,24 @@ export function getUserInfo () {
  * @param {Object} userInfo
  */
 export function setUserInfo (userInfo) {
-  setData('userInfo', userInfo)
+  setData('userInfo', JSON.stringify(userInfo))
 }
+
+/**
+ * 获取订单信息
+ */
+export function getOrderInfo () {
+  return JSON.parse(getData('orderInfo'))
+}
+
+/**
+ * 存储订单信息
+ * @param {Object} orderInfo
+ */
+export function setOrderInfo (orderInfo) {
+  setData('orderInfo', JSON.stringify(orderInfo))
+}
+
 /**
  * 获取当前url参数值
  * @param {*} query
@@ -114,6 +107,7 @@ export function getUrlParams (query, _url) {
     return returnValue
   }
 }
+
 /**
  * 获取Token
  */

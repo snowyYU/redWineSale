@@ -24,7 +24,7 @@
 import _ from 'lodash'
 import { mapState, mapActions } from 'vuex'
 import { getAddressInfo, checkOrderStatus } from '@/api'
-import { getToken, areaStringify, setData, getData } from '@/utils'
+import { getToken, areaStringify, setOrderInfo, getOrderInfo } from '@/utils'
 import UserAddress from '@/components/common/UserAddress'
 import ProductInfo from '@/components/OrderStatus/ProductInfo'
 import PaymentStatus from '@/components/OrderStatus/PaymentStatus'
@@ -97,7 +97,7 @@ export default {
     }
   },
   created () {
-    const orderInfo = getData('orderInfo')
+    const orderInfo = getOrderInfo()
     if (!_.isEmpty(orderInfo)) {
       this.updateOrderInfo(orderInfo)
     }
@@ -155,9 +155,8 @@ export default {
     },
     // 查询订单状态
     checkOrderStatus (mode) {
-      const orderNo = getData('orderNo')
+      const orderNo = this.orderInfo.orderNo
       checkOrderStatus(orderNo).then(res => {
-        // console.log(res.data)
         if (res.status === 200 && res.data.data.payState === 'SUCCESS') {
           this.clearCheckOrderInterval()
 
@@ -167,10 +166,9 @@ export default {
           const productType = this.formatProductType(num)
           const obj = Object.assign({}, this.orderInfo, { productType, payType, payTime: payDate })
           this.updateOrderInfo(obj)
-          setData('orderInfo', obj)
+          setOrderInfo(obj)
 
           this.isPaid = true
-          // this.$router.push({ name: 'order-success' })
         } else {
           if (mode) {
             this.$toast('支付未完成，请稍后')

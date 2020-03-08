@@ -20,7 +20,7 @@ export default {
   props: {
     original: {
       type: Number,
-      default: 680
+      default: 0
     },
     price: {
       type: Number,

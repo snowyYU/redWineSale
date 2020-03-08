@@ -38,12 +38,6 @@ export default {
       return this.localData.productList[parseInt(this.productType) - 1].label
     },
     price () {
-      // if (this.productType === '1') {
-      //   return '￥' + this.localData.productList[parseInt(this.productType) - 1].price
-      // } else {
-      //   const { original, sum } = this.localData.productList[parseInt(this.productType) - 1]
-      //   return '-￥' + (original - sum)
-      // }
       const { original, price } = this.localData.productList[parseInt(this.productType) - 1]
       return '-￥' + (original - price)
     },

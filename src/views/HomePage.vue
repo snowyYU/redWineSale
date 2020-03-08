@@ -111,9 +111,6 @@ export default {
     // 判断客户端环境获取用户code
     getCode () {
       switch (this.clientEvn) {
-        case 0:
-          // 浏览器环境
-          break
         case 1:
           // 微信环境
           wechatAuth(this.localData.wxAppId, getUrl(), 'code', 'snsapi_base')

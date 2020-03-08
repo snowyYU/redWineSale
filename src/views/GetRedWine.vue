@@ -31,7 +31,7 @@ import FixedSubmitBar from '@/components/GetRedWine/FixedSubmitBar'
 import ProgressBox from '@/components/common/ProgressBox'
 import { mapState, mapActions } from 'vuex'
 import { getAddressInfo, orderPay } from '@/api'
-import { getToken, areaStringify, wxConfig, wxReady, wxError, wxChooseWXPay, setData } from '@/utils'
+import { getToken, areaStringify, wxConfig, wxReady, wxError, wxChooseWXPay, setOrderInfo } from '@/utils'
 
 export default {
   name: 'get-red-wine',
@@ -73,7 +73,7 @@ export default {
      */
     window.onresize = _.throttle(this.useSafePadding, 100)
 
-    // 不在H5环境下，获取用户信息
+    // 获取用户信息
     this.getAddressInfo()
 
     // 开始做页面的回退拦截
@@ -190,14 +190,13 @@ export default {
         if (res.data.code === 200) {
           const { appId, timeStamp, nonceStr, paySign, mwebUrl, orderNo } = res.data.body
 
-          setData('orderNo', orderNo)
           const orderInfo = {
             orderNo, // 订单号
             productType: this.productType, // 商品类型
             payType: this.payType, // 支付类型
             payTime: this.payTime // 支付时间
           }
-          setData('orderInfo', orderInfo)
+          setOrderInfo(orderInfo)
           this.updateOrderInfo(orderInfo)
           switch (type) {
             case '1':
