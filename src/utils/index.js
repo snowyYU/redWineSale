@@ -3,7 +3,7 @@
  */
 
 import _ from 'lodash'
-import CryptoJS from 'crypto-js'
+import { v4 as uuidv4 } from 'uuid'
 
 /**
  * 获取session数据
@@ -133,7 +133,7 @@ export function setToken (token) {
  * 生成Token
  */
 export function buildToken () {
-  return CryptoJS.MD5(Date.now() * 100 + (Math.floor(Math.random() * 90) + 10)).toString()
+  return uuidv4()
 }
 
 // 将区域数据结构化
